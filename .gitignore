@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Third-party prior-art PDFs and documentation (copyrighted material)
+Papers/
+Patents/
+Documentation/
+docs/*.pdf
+docs/*.html
+docs/*.xlsx
+
+# Extracted prior-art text dumps
+docs/doc_texts.json
+docs/paper_texts.json
+docs/paper_texts_fixed.json
+docs/patent_texts.json
+
+# Personal patent filing draft (keep off public repo until after filing)
+docs/Claude-Cloud computing project patent filing.md
+docs/Patent cloud.pdf
+
+# Prior-art analysis scripts (internal tooling, not part of the framework)
+docs/deep_analyze*.py
+docs/analyze_all.py
+docs/add_docs.py
+docs/comparative_analysis.py
+docs/extract_docs.py
+docs/extract_text.py
+docs/fix_patents.py
+docs/prior_art_intelligence.json
+docs/prior_art_database.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/

@@ -1,0 +1,3426 @@
+{
+  "graphs": {
+    "seed-v1.0.0": {
+      "version_id": "seed-v1.0.0",
+      "created_at": "2026-08-02T14:57:32.879630+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0",
+        "node_count": 10,
+        "edge_count": 9,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:expand_db_connection_pool",
+            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
+            "node_type": "action",
+            "target_service": "payment-db",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 10,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 10,
+      "edge_count": 9
+    },
+    "seed-v1.0.0-rem-restart_auth_service": {
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "created_at": "2026-08-02T14:11:26.144537+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-restart_auth_service",
+        "node_count": 9,
+        "edge_count": 8,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:expand_db_connection_pool",
+            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
+            "node_type": "action",
+            "target_service": "payment-db",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 10,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 9,
+      "edge_count": 8
+    },
+    "seed-v1.0.0-rem-error_rate": {
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "created_at": "2026-08-02T14:57:32.743783+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-error_rate",
+        "node_count": 9,
+        "edge_count": 8,
+        "nodes": [
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:expand_db_connection_pool",
+            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
+            "node_type": "action",
+            "target_service": "payment-db",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 10,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 9,
+      "edge_count": 8
+    },
+    "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool": {
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "created_at": "2026-08-02T14:57:32.777733+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+        "node_count": 8,
+        "edge_count": 7,
+        "nodes": [
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 8,
+      "edge_count": 7
+    },
+    "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service": {
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "created_at": "2026-08-02T14:57:32.817679+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+        "node_count": 7,
+        "edge_count": 6,
+        "nodes": [
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 7,
+      "edge_count": 6
+    },
+    "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss": {
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "created_at": "2026-08-02T14:57:32.853545+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+        "node_count": 6,
+        "edge_count": 5,
+        "nodes": [
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 6,
+      "edge_count": 5
+    },
+    "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool": {
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "created_at": "2026-08-02T14:11:26.204845+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+        "node_count": 8,
+        "edge_count": 7,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 8,
+      "edge_count": 7
+    },
+    "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss": {
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "created_at": "2026-08-02T14:11:26.267458+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+        "node_count": 7,
+        "edge_count": 6,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 7,
+      "edge_count": 6
+    },
+    "seed-v1.0.0-rem-expand_db_connection_pool": {
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "created_at": "2026-08-02T14:57:32.953965+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+        "node_count": 9,
+        "edge_count": 8,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 9,
+      "edge_count": 8
+    },
+    "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service": {
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "created_at": "2026-08-02T14:57:33.018210+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+        "node_count": 8,
+        "edge_count": 7,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:network:packet_loss",
+            "label": "Check Core Gateway Network Packet Loss",
+            "node_type": "check",
+            "target_service": "api-gateway",
+            "target_metric": "packet_loss",
+            "info_gain": 0.02,
+            "avg_duration_s": 5,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:network:packet_loss",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:network:packet_loss",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 8,
+      "edge_count": 7
+    },
+    "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss": {
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "created_at": "2026-08-02T14:57:33.094423+00:00",
+      "graph": {
+        "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+        "node_count": 7,
+        "edge_count": 6,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:frontend:cpu_utilization",
+            "label": "Check Frontend Web UI CPU Saturation",
+            "node_type": "check",
+            "target_service": "frontend",
+            "target_metric": "cpu_utilization",
+            "info_gain": 0.01,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:frontend:cpu_utilization",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:frontend:cpu_utilization",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          }
+        ]
+      },
+      "node_count": 7,
+      "edge_count": 6
+    }
+  },
+  "transformations": [
+    {
+      "timestamp": "2026-08-02T13:09:42.027454+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:09:56.672741+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.319858+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.417185+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.425887+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.491834+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.585892+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.598121+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "transformation_type": "REMOVE:entry:payment-api:error_rate",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.609747+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.625049+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5453,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.638220+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5768,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.876428+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.925994+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.970324+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.018617+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:17.938419+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.055819+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.063500+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.085260+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "transformation_type": "REMOVE:entry:payment-api:error_rate",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.106851+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.132108+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5453,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.153519+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5768,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.176371+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.181759+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.229136+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.280366+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.325705+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.820800+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.936189+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.943799+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.977773+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "transformation_type": "REMOVE:entry:payment-api:error_rate",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.007180+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.038685+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5453,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.071703+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5768,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.093241+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.100773+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.162351+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.230271+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.290531+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:10:14.629668+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:10:55.057376+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.070644+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.144537+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.204845+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.267458+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:14:42.858980+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:14:44.560635+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:14:46.602168+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:14:56.698157+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:15:06.054638+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:15:19.733588+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.566605+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.699435+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.707111+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.743783+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "transformation_type": "REMOVE:entry:payment-api:error_rate",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.777733+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.817679+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5453,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.853545+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5768,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.868946+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.879630+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.953965+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.018210+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.094423+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    }
+  ],
+  "mttr_history": [
+    {
+      "timestamp": "2026-08-02T13:10:13.366738+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.431103+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.434895+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.438482+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.443930+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.448790+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.452836+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.457210+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.462226+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.465698+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.469013+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.506738+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.512805+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.516971+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.521471+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.528445+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.535368+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.539795+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.547525+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.552444+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:10:13.557671+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.589017+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.590126+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.591144+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.592156+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.593175+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.600604+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.602021+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.603299+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.604712+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.606253+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.611612+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.613750+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.618657+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.620399+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.621882+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.626855+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.628626+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.630613+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.632876+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:37:08.634696+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.880864+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.883339+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.885799+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.888384+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.891948+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.894022+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.896017+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.897969+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.899950+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.902184+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.931138+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.934949+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.938482+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.942448+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.947198+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.950061+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.952940+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.956478+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.959489+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.963148+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.974160+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.977428+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.981066+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.984636+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.989197+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.992630+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:39.997166+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.000678+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.005549+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.011813+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.021764+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.025762+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.028768+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.032355+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.035289+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.038764+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.046403+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.054305+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.063383+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.071166+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.075867+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.079226+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.082557+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.085868+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.089114+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.092159+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.095165+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.098263+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.101423+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:41:40.104914+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T13:48:17.993720+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.067664+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.070463+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.073501+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.076856+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.079624+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.088662+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.091988+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.094996+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.098107+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.101230+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.112119+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.115836+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.119270+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.122970+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.127441+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.135171+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.138492+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.142691+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.146380+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.149114+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.186252+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.190523+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.194656+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.197880+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.201098+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.204926+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.210165+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.214560+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.218051+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.221951+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.233115+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.237027+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.241332+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.245458+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.248968+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.252781+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.258496+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.264561+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.268801+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.273219+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.284483+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.288471+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.293046+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.296555+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.299856+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.303538+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.307760+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.312136+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.315748+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T13:48:18.319163+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.876809+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.950181+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.956400+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.960165+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.965583+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.971604+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.982595+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.987717+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.991440+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.995231+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:43.999436+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.011479+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.016478+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.021637+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.025637+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.030814+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.042748+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.047559+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.052747+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.057811+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.062421+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.108208+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.112297+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.117222+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.123147+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.127517+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.132292+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.138374+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.142487+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.146910+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.154295+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.168595+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.173856+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.177780+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.182349+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.188459+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.193613+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.198637+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.208581+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.213459+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.221202+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.236979+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.241483+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.245594+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.250639+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.256389+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.260713+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.265741+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.271985+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.276358+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:08:44.280696+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.079502+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.085670+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.093991+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.100489+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.106613+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.114441+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.120133+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.125468+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.130236+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.135265+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.149684+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.154955+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.159759+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.165834+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.172128+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.178439+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.183980+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.188648+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.193310+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.197397+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.210134+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.215291+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.220313+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.225357+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.230284+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.236818+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.243558+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.249114+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.253951+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.259308+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.272619+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.277690+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.282750+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.288137+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.293828+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.301395+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.307939+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.313747+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.318077+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.334358+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.340127+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.346398+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.353296+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.358485+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.363161+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.368538+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.373547+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.379220+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.384220+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:11:26.389312+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.634975+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.714373+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.719498+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.725375+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.731674+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.736293+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.749235+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.754367+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.759884+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.764747+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.769368+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.782890+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.788827+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.797452+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.803989+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.810095+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.824498+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.829968+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.835257+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.840739+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.846056+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.886674+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.895789+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.903606+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.910071+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.915492+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.920368+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.927060+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.932917+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.938372+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.944744+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.961221+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.966901+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.973662+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.980027+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.984974+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.990087+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.994773+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:57:32.999323+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.004569+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.009874+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.026252+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.034843+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.044042+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.048874+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.053559+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.060827+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.066604+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.072942+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.079053+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-08-02T14:57:33.084477+00:00",
+      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    }
+  ]
+}
