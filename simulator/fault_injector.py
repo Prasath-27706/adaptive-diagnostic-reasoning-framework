@@ -66,12 +66,16 @@ class FaultInjector:
         if seed is not None:
             random.seed(seed)
 
-    def inject_fault(self, graph: nx.DiGraph) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+    def inject_fault(self, graph: nx.DiGraph, fault_type: str = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
         """
         Selects a fault, injects root cause, and computes upstream propagated symptoms.
         Returns: (root_cause_dict, list_of_symptoms)
         """
-        preset = random.choice(self.FAULT_PRESETS)
+        if fault_type:
+            matching = [p for p in self.FAULT_PRESETS if p["fault_type"] == fault_type]
+            preset = matching[0] if matching else random.choice(self.FAULT_PRESETS)
+        else:
+            preset = random.choice(self.FAULT_PRESETS)
         root_service = preset["service"]
 
         # Ensure node exists in graph

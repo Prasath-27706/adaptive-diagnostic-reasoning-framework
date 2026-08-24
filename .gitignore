@@ -41,3 +41,7 @@ Thumbs.db
 # Editors
 .vscode/
 .idea/
+
+# Tooling metadata
+.mimosa/
+
