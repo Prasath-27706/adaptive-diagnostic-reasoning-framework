@@ -1,0 +1,16 @@
+# Core Web & API Framework
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pydantic>=2.0.0
+
+# Diagnostic Graph Engine
+networkx>=3.0
+
+# Interactive Dashboard & Data Visualization (Module 7)
+streamlit>=1.30.0
+pandas>=2.0.0
+plotly>=5.15.0
+
+# Testing & HTTP Utilities
+httpx>=0.24.0
+pytest>=7.0.0
