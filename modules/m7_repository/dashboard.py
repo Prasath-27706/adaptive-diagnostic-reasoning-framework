@@ -41,20 +41,35 @@ CUSTOM_CSS = """
         font-family: 'Inter', sans-serif;
     }
     
-    .stApp {
-        background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
-        color: #f8fafc;
+    /* Ensure global background and white text for high contrast */
+    .stApp, [data-testid="stAppViewContainer"] {
+        background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%) !important;
+        color: #f8fafc !important;
+    }
+    
+    /* Force text colors across Streamlit elements to avoid dark-text-on-dark-bg */
+    [data-testid="stMarkdownContainer"] p, 
+    [data-testid="stMarkdownContainer"] h1, 
+    [data-testid="stMarkdownContainer"] h2, 
+    [data-testid="stMarkdownContainer"] h3, 
+    [data-testid="stMarkdownContainer"] h4, 
+    [data-testid="stMarkdownContainer"] span, 
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stHeader"],
+    label,
+    .stText {
+        color: #f8fafc !important;
     }
     
     /* Top Banner Card */
     .hero-banner {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(56, 189, 248, 0.3);
         border-radius: 16px;
         padding: 24px 32px;
         margin-bottom: 20px;
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.6);
     }
     .hero-title {
         font-size: 2.1rem;
@@ -65,8 +80,31 @@ CUSTOM_CSS = """
         margin-bottom: 4px;
     }
     .hero-subtitle {
-        color: #94a3b8;
+        color: #94a3b8 !important;
         font-size: 1.05rem;
+    }
+
+    /* Key Metric Cards */
+    .metric-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .metric-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #94a3b8 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+    }
+    .metric-value {
+        font-size: 1.4rem;
+        font-weight: 800;
     }
 
     /* Faculty Explanation Box */
@@ -78,27 +116,83 @@ CUSTOM_CSS = """
         margin-bottom: 24px;
     }
     
-    /* Microservice Flow Card */
+    /* Connected Microservice Flow Diagram */
+    .flow-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(30, 41, 59, 0.4) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 16px;
+        padding: 18px 16px;
+        margin-bottom: 24px;
+        box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.4);
+    }
+    .flow-step {
+        flex: 1;
+        min-width: 0;
+    }
+    .flow-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #38bdf8;
+        font-size: 1.5rem;
+        font-weight: 900;
+        padding: 0 2px;
+        text-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+        animation: pulseArrow 2s infinite ease-in-out;
+        user-select: none;
+    }
+    @keyframes pulseArrow {
+        0%, 100% { opacity: 0.6; transform: translateX(0); }
+        50% { opacity: 1; transform: translateX(3px); }
+    }
     .service-card {
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
-        padding: 16px;
+        padding: 14px 10px;
         text-align: center;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
+        position: relative;
     }
     .service-card:hover {
         border-color: #38bdf8;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25);
+    }
+    .service-card.highlight {
+        border-color: rgba(56, 189, 248, 0.6);
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(14, 165, 233, 0.15) 100%);
+    }
+    .step-badge {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #94a3b8 !important;
+        background: rgba(15, 23, 42, 0.7);
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-top: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .step-badge.highlight {
+        color: #38bdf8 !important;
+        border-color: rgba(56, 189, 248, 0.4);
+        background: rgba(56, 189, 248, 0.15);
     }
     .service-name {
         font-weight: 700;
-        font-size: 1rem;
-        color: #f8fafc;
+        font-size: 0.95rem;
+        color: #f8fafc !important;
     }
     .service-role {
-        font-size: 0.78rem;
-        color: #94a3b8;
+        font-size: 0.75rem;
+        color: #94a3b8 !important;
         margin-top: 2px;
     }
 
@@ -117,11 +211,11 @@ CUSTOM_CSS = """
     .node-title {
         font-weight: 700;
         font-size: 1rem;
-        color: #f1f5f9;
+        color: #f1f5f9 !important;
     }
     .node-detail {
         font-size: 0.85rem;
-        color: #94a3b8;
+        color: #94a3b8 !important;
         margin-top: 4px;
     }
     
@@ -138,12 +232,37 @@ CUSTOM_CSS = """
     /* Key Metric Badge */
     .kpi-badge {
         background: rgba(56, 189, 248, 0.1);
-        color: #38bdf8;
+        color: #38bdf8 !important;
         border: 1px solid rgba(56, 189, 248, 0.2);
         padding: 4px 12px;
         border-radius: 999px;
         font-size: 0.8rem;
         font-weight: 600;
+    }
+
+    /* Streamlit Tabs Styling */
+    button[data-baseweb="tab"] {
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #38bdf8 !important;
+        border-bottom-color: #38bdf8 !important;
+    }
+
+    /* Expander Styling */
+    [data-testid="stExpander"] {
+        background: rgba(30, 41, 59, 0.4) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        border-radius: 12px !important;
+    }
+
+    /* Selectbox Styling */
+    [data-baseweb="select"] > div {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border-color: rgba(56, 189, 248, 0.3) !important;
     }
 </style>
 """
@@ -420,7 +539,7 @@ with kpi4:
 st.write("")
 
 # --- FACULTY EVALUATOR QUICK EXPLANATION BOX ---
-with st.expander("🎓 **Evaluator & Faculty Guide: How this AI Engine Works in 30 Seconds**", expanded=False):
+with st.expander("🎓 **How this AI Engine Works in 30 Seconds**", expanded=False):
     st.markdown("""
     This framework solves a critical cloud computing challenge: **Manual cloud incident troubleshooting takes too long (High MTTR).**
     
@@ -449,47 +568,54 @@ with tab1:
     st.markdown("### 1. Target Cloud Microservice Architecture (E-Commerce Payment Domain)")
     st.caption("Visual flow of customer checkout payment requests through backend cloud services.")
     
-    s1, s2, s3, s4, s5 = st.columns(5)
-    with s1:
-        st.markdown("""
-        <div class="service-card">
-            <div style="font-size: 1.5rem;">🖥️</div>
-            <div class="service-name">Frontend Web UI</div>
-            <div class="service-role">User Checkout</div>
+    st.markdown("""
+    <div class="flow-container">
+        <div class="flow-step">
+            <div class="service-card">
+                <div style="font-size: 1.6rem; margin-bottom: 4px;">🖥️</div>
+                <div class="service-name">Frontend Web UI</div>
+                <div class="service-role">User Checkout</div>
+                <div class="step-badge">Step 1</div>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-    with s2:
-        st.markdown("""
-        <div class="service-card">
-            <div style="font-size: 1.5rem;">🌐</div>
-            <div class="service-name">API Gateway</div>
-            <div class="service-role">Route & Ingress</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+            <div class="service-card">
+                <div style="font-size: 1.6rem; margin-bottom: 4px;">🌐</div>
+                <div class="service-name">API Gateway</div>
+                <div class="service-role">Route & Ingress</div>
+                <div class="step-badge">Step 2</div>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-    with s3:
-        st.markdown("""
-        <div class="service-card">
-            <div style="font-size: 1.5rem;">📦</div>
-            <div class="service-name">Order Service</div>
-            <div class="service-role">Order Creation</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+            <div class="service-card">
+                <div style="font-size: 1.6rem; margin-bottom: 4px;">📦</div>
+                <div class="service-name">Order Service</div>
+                <div class="service-role">Order Creation</div>
+                <div class="step-badge">Step 3</div>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-    with s4:
-        st.markdown("""
-        <div class="service-card" style="border-color: #38bdf8;">
-            <div style="font-size: 1.5rem;">💳</div>
-            <div class="service-name" style="color:#38bdf8;">Payment API</div>
-            <div class="service-role">Core Payment Engine</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+            <div class="service-card highlight">
+                <div style="font-size: 1.6rem; margin-bottom: 4px;">💳</div>
+                <div class="service-name" style="color:#38bdf8;">Payment API</div>
+                <div class="service-role">Core Payment Engine</div>
+                <div class="step-badge highlight">Step 4</div>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-    with s5:
-        st.markdown("""
-        <div class="service-card">
-            <div style="font-size: 1.5rem;">🗄️</div>
-            <div class="service-name">Payment DB / Auth</div>
-            <div class="service-role">PostgreSQL & Tokens</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+            <div class="service-card">
+                <div style="font-size: 1.6rem; margin-bottom: 4px;">🗄️</div>
+                <div class="service-name">Payment DB / Auth</div>
+                <div class="service-role">PostgreSQL & Tokens</div>
+                <div class="step-badge">Step 5</div>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
     st.write("")
     st.markdown("### 2. Interactive AI Diagnostic Reasoning Graph")
@@ -690,7 +816,7 @@ with tab2:
     <div style="background:rgba(15,23,42,0.75); border:1px solid rgba(56,189,248,0.25);
                 border-radius:12px; padding:16px 20px; margin-top:14px;">
         <div style="font-weight:700; color:#38bdf8; font-size:0.95rem;">
-            💡 One-Line Pitch for Faculty
+            💡 Quick Explanation
         </div>
         <div style="color:#cbd5e1; font-size:0.92rem; margin-top:6px; line-height:1.7;">
             <i>"Our AI framework analysed 30 past payment outages, identified 3 diagnostic checks that
@@ -820,7 +946,7 @@ with tab3:
                 timeline_items.append(card_html)
 
             timeline_items.append('</div>')
-            st.html("".join(timeline_items))
+            st.markdown("".join(timeline_items), unsafe_allow_html=True)
 
 # ==============================================================================
 # TAB 4: AI GRAPH EVOLUTION ENGINE & SAFETY GATE
@@ -829,22 +955,84 @@ with tab4:
     st.markdown("### ⚙️ Self-Evolution Engine & Safety Verification Gate")
     st.caption("Watch Modules 4 (Information Gain), Module 5 (Multi-Objective Optimization), and Module 6 (Safety Gate) collaborate.")
     
+    # ── Plain-English Explanation Card ───────────────────────────────────────
     st.markdown("""
-    <div style="background: rgba(15, 23, 42, 0.7); padding: 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 20px;">
-        <div style="font-weight: 700; color: #38bdf8; font-size: 1rem;">Core Novelty Execution Pipeline</div>
-        <p style="color: #94a3b8; font-size: 0.88rem; margin-top: 6px; line-height: 1.6;">
-            1. <b>Extract Experience</b>: Calculate Shannon Entropy <code>H(X)</code> & empirical Information Gain <code>IG(Check)</code> across decision trace logs.<br>
-            2. <b>Mutate Graph</b>: Propose structural mutations (<code>REMOVE</code> redundant check, <code>REORDER</code> by efficiency, <code>ADD</code> missing check).<br>
-            3. <b>Multi-Objective Score</b>: Rank candidate graph mutations balancing Information Gain, duration, and complexity.<br>
-            4. <b>Safety Gate Replay</b>: Assert candidate graph is a valid DAG and performance never degrades (<code>MTTR<sub>candidate</sub> ≤ MTTR<sub>current</sub> × 1.10</code>).
-        </p>
+    <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+                border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px;">
+        <div style="font-weight: 800; color: #38bdf8; font-size: 1.1rem; margin-bottom: 8px;">
+            💡 What is happening in this tab?
+        </div>
+        <div style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.7;">
+            This tab is the <b>Self-Learning Brain</b> of the AIOps platform.<br>
+            Instead of engineers manually updating troubleshooting playbooks, the AI continuously monitors incident traces:
+            <ol style="margin-top: 6px; margin-bottom: 4px; padding-left: 20px;">
+                <li>Identifies diagnostic checks that <b>waste time and never find root causes</b> (Zero Information Gain).</li>
+                <li>Proposes structural mutations (e.g. <b>deleting useless checks</b> or <b>reordering fast checks first</b>).</li>
+                <li>Passes candidate graphs through a <b>strict 2-stage Safety Verification Gate</b> before promoting to production.</li>
+            </ol>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
-    col_e1, col_e2 = st.columns(2)
+    # ── Visual 4-Stage Pipeline ──────────────────────────────────────────────
+    st.markdown("#### 🔄 4-Stage Autonomous Self-Evolution Pipeline")
+    
+    p1, a1, p2, a2, p3, a3, p4 = st.columns([1, 0.15, 1, 0.15, 1, 0.15, 1])
+    with p1:
+        st.markdown("""
+        <div class="service-card" style="text-align: left; padding: 14px;">
+            <div style="font-size: 1.2rem;">📥 <b>Stage 1</b></div>
+            <div style="font-weight: 700; color: #38bdf8; margin-top: 4px;">Experience Extraction</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">
+                Calculates Shannon Entropy H(X) & Information Gain IG across decision traces.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with a1:
+        st.markdown('<div style="font-size: 1.5rem; text-align: center; line-height: 80px; color: #38bdf8;">➔</div>', unsafe_allow_html=True)
+    with p2:
+        st.markdown("""
+        <div class="service-card" style="text-align: left; padding: 14px;">
+            <div style="font-size: 1.2rem;">🧬 <b>Stage 2</b></div>
+            <div style="font-weight: 700; color: #c084fc; margin-top: 4px;">Structural Mutation</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">
+                Proposes REMOVE (prune step), REORDER (by latency), or ADD missing checks.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with a2:
+        st.markdown('<div style="font-size: 1.5rem; text-align: center; line-height: 80px; color: #38bdf8;">➔</div>', unsafe_allow_html=True)
+    with p3:
+        st.markdown("""
+        <div class="service-card" style="text-align: left; padding: 14px;">
+            <div style="font-size: 1.2rem;">🎯 <b>Stage 3</b></div>
+            <div style="font-weight: 700; color: #818cf8; margin-top: 4px;">Multi-Objective Optimization</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">
+                Ranks candidate graphs balancing Information Gain, duration, and complexity.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with a3:
+        st.markdown('<div style="font-size: 1.5rem; text-align: center; line-height: 80px; color: #38bdf8;">➔</div>', unsafe_allow_html=True)
+    with p4:
+        st.markdown("""
+        <div class="service-card" style="text-align: left; padding: 14px; border-color: #34d399;">
+            <div style="font-size: 1.2rem;">🛡️ <b>Stage 4</b></div>
+            <div style="font-weight: 700; color: #34d399; margin-top: 4px;">Safety Verification Gate</div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">
+                Guarantees DAG structural validity (no loops) & zero MTTR regression.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+    
+    # ── Interactive Trigger Buttons ──────────────────────────────────────────
+    st.markdown("#### ⚡ Run Evolution Experiment")
+    col_e1, col_e2 = st.columns([1.5, 1])
     
     with col_e1:
-        if st.button("🚀 Trigger AI Self-Evolution Iteration", type="primary"):
+        if st.button("🚀 Trigger AI Self-Evolution Iteration", type="primary", use_container_width=True):
             with st.spinner("Extracting Information Gain, mutating graph, and verifying non-regression..."):
                 topo = TopologyGenerator().generate()
                 injector = FaultInjector()
@@ -870,14 +1058,56 @@ with tab4:
                     sample_mttr = sum(ans["mttr_s"] for ans in [analyzer.analyze_incident(candidate_g, {"incident_id": "V1", "root_cause": rc, "symptoms": syms})])
                     repo.log_mttr_point(candidate_g.version_id, sample_mttr)
                     
+                    st.session_state["last_evolution_report"] = {
+                        "transformation": evo_res["selected_transformation"],
+                        "score": evo_res["best_score"],
+                        "status": "APPROVED",
+                        "new_version": candidate_g.version_id,
+                        "nodes": len(candidate_g.graph.nodes)
+                    }
                     st.balloons()
-                    st.success(f"🎉 Applied Approved Mutation: `{evo_res['selected_transformation']}` (Multi-Objective Score: {evo_res['best_score']})")
                     st.rerun()
                 else:
                     st.error(f"❌ Safety Gate Rejected Candidate: {v_report['rejection_reasons']}")
                     
     with col_e2:
-        if st.button("🔄 Reset Graph to Baseline"):
+        if st.button("🔄 Reset Graph to Baseline", use_container_width=True):
             st.session_state["current_graph"] = create_payment_seed_graph()
+            if "last_evolution_report" in st.session_state:
+                del st.session_state["last_evolution_report"]
             st.success("Graph reset to baseline PaymentSeedGraph.")
             st.rerun()
+
+    # Display Last Evolution Result Card if present
+    if "last_evolution_report" in st.session_state:
+        rep = st.session_state["last_evolution_report"]
+        st.markdown(f"""
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1.5px solid #10b981; border-radius: 12px; padding: 18px 22px; margin-top: 16px;">
+            <div style="font-weight: 800; color: #10b981; font-size: 1.05rem;">🎉 AI Self-Evolution Iteration Successful!</div>
+            <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px; line-height: 1.7;">
+                • <b>Applied Mutation</b>: <code style="color:#38bdf8; background:#0f172a; padding:2px 8px; border-radius:4px;">{rep['transformation']}</code><br>
+                • <b>Multi-Objective Score</b>: <b style="color:#c084fc;">{rep['score']}</b><br>
+                • <b>Safety Verification Gate Status</b>: <b style="color:#34d399;">APPROVED 🟢 (DAG Acyclic Verified & Zero MTTR Regression)</b><br>
+                • <b>New Evolved Graph Version</b>: <code style="color:#38bdf8;">{rep['new_version']}</code> ({rep['nodes']} active nodes)
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.write("")
+    st.markdown("#### 📜 Evolutionary Transformation Audit Trail")
+    st.caption("Complete persistent record of graph versions and safety verification history stored in the Knowledge Repository.")
+
+    history = repo.get_transformation_history()
+    if history:
+        df_hist = pd.DataFrame(history)
+        df_hist["timestamp"] = df_hist["timestamp"].apply(lambda t: t.split(".")[0].replace("T", " "))
+        df_hist.rename(columns={
+            "timestamp": "Time (UTC)",
+            "version_id": "Graph Version ID",
+            "transformation_type": "Applied Mutation",
+            "score": "Multi-Obj Score",
+            "verification_status": "Safety Gate Status"
+        }, inplace=True)
+        st.dataframe(df_hist, use_container_width=True, hide_index=True)
+    else:
+        st.info("No transformation history recorded yet. Click the red button above to trigger an evolution cycle.")

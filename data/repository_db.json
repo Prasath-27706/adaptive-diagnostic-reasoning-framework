@@ -2,7 +2,7 @@
   "graphs": {
     "seed-v1.0.0": {
       "version_id": "seed-v1.0.0",
-      "created_at": "2026-08-24T16:47:07.338527+00:00",
+      "created_at": "2026-09-01T04:42:54.981229+00:00",
       "graph": {
         "version_id": "seed-v1.0.0",
         "node_count": 10,
@@ -171,7 +171,7 @@
     },
     "seed-v1.0.0-rem-restart_auth_service": {
       "version_id": "seed-v1.0.0-rem-restart_auth_service",
-      "created_at": "2026-08-21T05:12:00.866343+00:00",
+      "created_at": "2026-09-01T04:42:55.168308+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-restart_auth_service",
         "node_count": 9,
@@ -324,7 +324,7 @@
     },
     "seed-v1.0.0-rem-error_rate": {
       "version_id": "seed-v1.0.0-rem-error_rate",
-      "created_at": "2026-08-24T16:45:30.971166+00:00",
+      "created_at": "2026-09-01T04:42:54.601289+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-error_rate",
         "node_count": 9,
@@ -840,7 +840,7 @@
     },
     "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool": {
       "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
-      "created_at": "2026-08-21T05:12:01.045334+00:00",
+      "created_at": "2026-09-01T04:42:55.354638+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
         "node_count": 8,
@@ -977,7 +977,7 @@
     },
     "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss": {
       "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
-      "created_at": "2026-08-21T05:12:01.220337+00:00",
+      "created_at": "2026-09-01T04:42:55.544169+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
         "node_count": 7,
@@ -1509,7 +1509,7 @@
     },
     "seed-v1.0.0-rem-error_rate-rem-restart_auth_service": {
       "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
-      "created_at": "2026-08-21T04:49:04.254635+00:00",
+      "created_at": "2026-09-01T04:42:54.708104+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
         "node_count": 8,
@@ -1646,7 +1646,7 @@
     },
     "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool": {
       "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
-      "created_at": "2026-08-21T04:49:04.999510+00:00",
+      "created_at": "2026-09-01T04:42:54.826116+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
         "node_count": 7,
@@ -1767,7 +1767,7 @@
     },
     "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss": {
       "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
-      "created_at": "2026-08-21T04:49:05.597765+00:00",
+      "created_at": "2026-09-01T04:42:54.936902+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
         "node_count": 6,
@@ -4620,6 +4620,244 @@
       "version_id": "seed-v1.0.0",
       "transformation_type": "INITIAL_SEED",
       "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.617494+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.789053+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.962186+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.132904+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.081086+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.274689+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.453478+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.621673+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:39.901443+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.130577+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.303566+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.480966+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.423696+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.630307+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.833765+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.027690+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:39.972843+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.184785+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.370178+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.560656+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:33:22.144618+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:41:44.390824+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.326488+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.476999+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.496647+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.601289+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "transformation_type": "REMOVE:entry:payment-api:error_rate",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.708104+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.826116+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5453,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.936902+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5768,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.960198+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.981229+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.168308+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "transformation_type": "REMOVE:action:restart_auth_service",
+      "score": 0.4992,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.354638+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "transformation_type": "REMOVE:action:expand_db_connection_pool",
+      "score": 0.5199,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.544169+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.5444,
       "verification_status": "APPROVED"
     }
   ],
@@ -9932,6 +10170,1511 @@
     {
       "timestamp": "2026-08-24T16:45:31.785442+00:00",
       "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.635456+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.650007+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.664398+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.678658+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.693371+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.708847+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.725202+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.740483+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.754925+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.770570+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.804503+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.820307+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.836242+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.851851+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.867320+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.882874+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.898436+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.913927+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.930006+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.944658+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.977026+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:12.992222+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.007017+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.023393+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.037700+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.052620+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.067163+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.081479+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.096164+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.110613+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.151881+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.171906+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.187819+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.203682+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.219105+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.234926+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.250380+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.267072+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.341584+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.357645+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.373795+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.388934+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.403914+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.418809+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.434690+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.449936+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.465141+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.479841+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.494314+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:13.509473+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.105555+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.128983+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.146276+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.163999+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.180082+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.194988+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.211443+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.226726+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.241824+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.256307+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.292048+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.311801+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.327266+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.341954+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.356928+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.371626+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.386673+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.401853+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.418185+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.433295+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.468992+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.484834+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.499232+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.514128+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.528648+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.543386+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.557989+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.572490+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.587222+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.601736+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.637196+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.653755+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.670519+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.685602+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.700394+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.715315+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.729621+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.744192+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.758430+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.773324+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.790622+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.806172+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.821358+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.836635+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.851857+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.867234+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.882508+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.897065+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.911607+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:22.926151+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:39.924799+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:39.946915+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:29:39.970078+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:39.991668+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.019886+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.045762+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.062084+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.078198+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.094343+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.110546+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.145994+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.161833+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.177424+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.192511+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.209238+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.225373+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.240477+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.255546+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.270691+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.285936+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.320239+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.336194+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.352130+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.368057+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.383697+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.399873+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.415286+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.432375+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.447839+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.463309+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.496581+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.511615+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.526584+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.541564+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.557750+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.573609+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.589824+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.606220+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.623884+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.639545+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.656930+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.672891+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.688987+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.705366+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.721938+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.737446+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.752808+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.768915+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.784058+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:29:40.799318+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.446800+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.471850+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.494548+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.511356+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.528536+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.545424+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.562005+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.578002+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.593287+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.610281+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.649301+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.670887+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.690963+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.708196+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.726901+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.742321+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.759673+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.776233+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.794011+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.812940+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.850975+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.868502+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.886772+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.903583+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.920120+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.938308+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.955773+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.971749+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:30.988554+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.007142+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.046453+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.063733+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.080183+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.108440+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.123608+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.141781+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.159445+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.174612+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.190758+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.262294+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.281549+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.297826+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.314607+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.332432+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.348454+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.364585+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.381280+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.398331+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.414998+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:31.431911+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:39.993571+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.017744+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.043649+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.061488+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.080820+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.098529+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.115199+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.132116+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.149106+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.165610+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.201139+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.218786+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.236054+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.253352+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.269952+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.286163+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.302653+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.319069+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.335531+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.351905+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.386721+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.405046+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.424664+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.441344+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.457773+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.475083+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.491491+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.508953+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.525217+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.541508+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.577093+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.593481+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.609760+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.625895+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.641852+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.657888+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.673717+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.690081+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.707900+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.724467+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.741728+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.758756+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.775320+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.791943+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.808764+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.825931+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.846178+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.862670+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.878505+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:31:40.894669+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.396995+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.514214+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.531720+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.548213+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.564231+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.581481+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.619520+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.635147+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.652997+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.671638+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.690181+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.724148+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.745118+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.765854+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.786526+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.807625+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.846328+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.864691+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.883769+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.901682+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.918681+00:00",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 85
+    },
+    {
+      "timestamp": "2026-09-01T04:42:54.999068+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.015585+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.032085+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.049236+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.065465+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.082393+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.098783+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.115091+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.131853+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.148239+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.185664+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.202994+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.219033+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.235373+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.251443+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.267431+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.284454+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.301124+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.317501+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.334765+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.371801+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.388534+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.405821+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.422502+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.438884+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.455142+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.472211+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.489180+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.506268+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-09-01T04:42:55.524164+00:00",
+      "version_id": "seed-v1.0.0-rem-restart_auth_service-rem-expand_db_connection_pool",
       "mttr_s": 87
     }
   ]
