@@ -11,6 +11,7 @@ import sys
 import os
 import json
 import logging
+from typing import Optional
 from datetime import datetime, timezone
 
 # Add root path to sys.path
@@ -27,9 +28,9 @@ from modules.m7_repository import KnowledgeRepository
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 
-def run_benchmark(incidents_count: int = 50, batch_size: int = 10, seed: int = 42, output_path: str = "data/benchmark_results.json"):
+def run_benchmark(incidents_count: int = 50, batch_size: int = 10, seed: int = 42, output_path: str = "data/benchmark_results.json", mode: str = "synthetic", floci_endpoint: Optional[str] = None):
     print("=" * 75)
-    print("      CLOSED-LOOP GRAPH EVOLUTION BENCHMARK DEMO (PHASE 8)")
+    print(f"      CLOSED-LOOP GRAPH EVOLUTION BENCHMARK DEMO (PHASE 8) [{mode.upper()}]")
     print("=" * 75)
 
     # Initialize Simulator & Framework Modules
@@ -50,8 +51,8 @@ def run_benchmark(incidents_count: int = 50, batch_size: int = 10, seed: int = 4
     print(f"  └─ Batch Evolution Interval: Every {batch_size} incidents")
     print(f"  └─ Initial Graph: Version '{initial_version_id}' ({initial_node_count} nodes)")
 
-    # Generate synthetic incident pool
-    all_incidents = simulator.generate_incidents(count=incidents_count)
+    # Generate incident pool (synthetic or Floci-backed)
+    all_incidents = simulator.generate_incidents(count=incidents_count, mode=mode, floci_endpoint=floci_endpoint)
 
     batch_mttrs = []
     evolution_logs = []
@@ -134,6 +135,7 @@ def run_benchmark(incidents_count: int = 50, batch_size: int = 10, seed: int = 4
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_incidents": incidents_count,
         "batch_size": batch_size,
+        "mode": mode,
         "initial_mttr_s": round(initial_batch_mttr, 2),
         "final_mttr_s": round(final_batch_mttr, 2),
         "mttr_reduction_s": round(total_mttr_reduction, 2),
@@ -163,13 +165,18 @@ def main():
     parser.add_argument("--batch-size", type=int, default=10, help="Batch size between evolution cycles (default: 10)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument("--output", type=str, default="data/benchmark_results.json", help="Output JSON benchmark path")
+    parser.add_argument("--floci", action="store_true", help="Use Floci-backed real AWS emulation (requires docker compose up floci)")
+    parser.add_argument("--floci-endpoint", type=str, default=None, help="Floci endpoint URL (default: http://localhost:4566 or $AWS_ENDPOINT_URL)")
 
     args = parser.parse_args()
+    mode = "floci" if args.floci else "synthetic"
     run_benchmark(
         incidents_count=args.incidents,
         batch_size=args.batch_size,
         seed=args.seed,
-        output_path=args.output
+        output_path=args.output,
+        mode=mode,
+        floci_endpoint=args.floci_endpoint,
     )
 
 

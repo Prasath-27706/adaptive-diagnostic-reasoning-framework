@@ -1,8 +1,9 @@
 """
 Incident Simulator Orchestrator for E-Commerce Payment Subsystem.
+Supports synthetic and Floci-backed (real AWS emulation) modes.
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import random
 from .topology_generator import TopologyGenerator
 from .fault_injector import FaultInjector
@@ -25,10 +26,16 @@ class IncidentSimulator:
         self.fault_inj = FaultInjector(seed=seed)
         self.trace_rec = TraceRecorder(seed=seed)
 
-    def generate_incidents(self, count: int = 100) -> List[Dict[str, Any]]:
+    def generate_incidents(self, count: int = 100, mode: str = "synthetic", floci_endpoint: Optional[str] = None) -> List[Dict[str, Any]]:
         """
-        Generates N synthetic incident records.
+        Generates N incident records.
+        mode: 'synthetic' (default) or 'floci' (real AWS emulation via Floci).
         """
+        if mode == "floci":
+            from .floci_adapter import FlociAdapter
+            adapter = FlociAdapter(endpoint_url=floci_endpoint, seed=self.seed)
+            return adapter.generate_incidents(count=count)
+
         graph = self.topology_gen.generate()
         topology_dict = self.topology_gen.to_dict()
 
@@ -53,16 +60,17 @@ class IncidentSimulator:
                     "severity": root_cause.get("severity", "P1").upper(),
                     "source": "Prometheus AlertManager",
                     "summary": root_cause.get("summary", f"Anomaly detected in {root_cause['service']}")
-                }
+                },
+                "provenance": "synthetic",
             }
             incidents.append(incident_record)
 
         return incidents
 
-    def generate_and_export(self, count: int = 100, output_path: str = "data/payment_incidents.json"):
+    def generate_and_export(self, count: int = 100, output_path: str = "data/payment_incidents.json", mode: str = "synthetic", floci_endpoint: Optional[str] = None):
         """
         Generates and saves dataset to output_path.
         """
-        incidents = self.generate_incidents(count=count)
+        incidents = self.generate_incidents(count=count, mode=mode, floci_endpoint=floci_endpoint)
         DatasetExporter.export_to_json(incidents, output_path)
         return len(incidents)
