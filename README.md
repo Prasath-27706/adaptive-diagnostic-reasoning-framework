@@ -85,6 +85,17 @@ To run a closed-loop evolution benchmark across 50 simulated payment subsystem i
 python run_demo.py --incidents 50 --batch-size 10
 ```
 
+### (Optional) Floci-Backed Real AWS Emulation Mode:
+To run the benchmark with real AWS SDK calls (`boto3`) backed by Floci on `localhost:4566`:
+
+```bash
+# Start Floci container
+docker compose up -d floci
+
+# Run benchmark in Floci mode
+python run_demo.py --floci --incidents 50 --batch-size 10
+```
+
 Results will be exported to `data/benchmark_results.json`.
 
 ---

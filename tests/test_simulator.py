@@ -8,11 +8,14 @@ import tempfile
 import json
 import networkx as nx
 
+from unittest.mock import MagicMock, patch
+
 from simulator.topology_generator import TopologyGenerator
 from simulator.fault_injector import FaultInjector
 from simulator.trace_recorder import TraceRecorder
 from simulator.dataset_exporter import DatasetExporter
 from simulator.incident_simulator import IncidentSimulator
+from simulator.floci_adapter import FlociAdapter
 
 
 class TestSimulator(unittest.TestCase):
@@ -75,6 +78,47 @@ class TestSimulator(unittest.TestCase):
         finally:
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
+
+    def test_floci_adapter_unreachable_handling(self):
+        adapter = FlociAdapter(endpoint_url="http://localhost:59999", seed=42)
+        self.assertFalse(adapter.is_floci_available())
+        with self.assertRaises(RuntimeError) as ctx:
+            adapter.generate_incidents(count=2)
+        self.assertIn("Floci not available", str(ctx.exception))
+
+    def test_floci_adapter_mocked(self):
+        adapter = FlociAdapter(endpoint_url="http://mock-floci:4566", seed=42)
+        mock_s3 = MagicMock()
+        mock_ddb = MagicMock()
+        mock_sqs = MagicMock()
+        mock_iam = MagicMock()
+        mock_lambda = MagicMock()
+
+        mock_s3.list_buckets.return_value = {"Buckets": []}
+        mock_ddb.describe_table.return_value = {"Table": {"ItemCount": 10}}
+
+        def client_side_effect(service):
+            clients = {
+                "s3": mock_s3,
+                "dynamodb": mock_ddb,
+                "sqs": mock_sqs,
+                "iam": mock_iam,
+                "lambda": mock_lambda,
+            }
+            return clients[service]
+
+        with patch.object(adapter, "_client", side_effect=client_side_effect):
+            self.assertTrue(adapter.is_floci_available())
+            prov = adapter.provision()
+            self.assertIn("s3_bucket", prov)
+            self.assertIn("dynamodb", prov)
+
+            incidents = adapter.generate_incidents(count=3)
+            self.assertEqual(len(incidents), 3)
+            for inc in incidents:
+                self.assertEqual(inc["provenance"], "floci")
+                self.assertIn("INC-FLOCI-", inc["incident_id"])
+                self.assertTrue(DatasetExporter.validate_incident(inc))
 
 
 if __name__ == "__main__":
