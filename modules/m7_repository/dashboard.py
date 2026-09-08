@@ -783,12 +783,17 @@ with tab1:
         }
         for h in saved_hist[-6:]:
             v_id_h = h.get("version_id", "")
-            if v_id_h and v_id_h not in stage_options:
-                g_dict = repo.get_graph_by_version(v_id_h)
-                if g_dict:
-                    t_type = h.get("transformation_type", "MUTATION")
-                    lbl = f"🧬 Ver: {v_id_h[:24]}.. ({g_dict.get('node_count', '?')} nodes)"
-                    stage_options[lbl] = DiagnosticGraph.from_dict(g_dict)
+            if v_id_h:
+                ver_record = repo.get_graph_version(v_id_h)
+                if ver_record and "graph" in ver_record:
+                    g_data = ver_record["graph"]
+                    n_cnt = g_data.get("node_count", len(g_data.get("nodes", [])))
+                    lbl = f"🧬 Ver: {v_id_h[:22]}.. ({n_cnt} nodes)"
+                    if lbl not in stage_options:
+                        try:
+                            stage_options[lbl] = DiagnosticGraph.from_dict(g_data)
+                        except Exception:
+                            pass
 
         selected_stage_label = st.selectbox(
             "⏱️ Evolution Time-Travel (Select Version to Compare):",

@@ -92,6 +92,10 @@ class KnowledgeRepository:
         db = self._read_db()
         return db["graphs"].get(version_id)
 
+    def get_graph_by_version(self, version_id: str) -> Optional[Dict[str, Any]]:
+        """Alias for get_graph_version."""
+        return self.get_graph_version(version_id)
+
     def get_all_graph_versions(self) -> List[Dict[str, Any]]:
         db = self._read_db()
         return list(db["graphs"].values())
