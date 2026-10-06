@@ -81,8 +81,8 @@ class ExperienceExtractor:
             }
             summary_nodes[node_id] = node_summary
 
-            # Categorize nodes
-            if avg_ig < self.ig_removal_threshold:
+            # Categorize nodes (only check: diagnostic nodes can be candidates for removal!)
+            if node_id.startswith("check:") and avg_ig < self.ig_removal_threshold:
                 redundant_nodes.append(node_id)
             elif avg_ig >= self.ig_priority_threshold:
                 high_value_nodes.append(node_id)

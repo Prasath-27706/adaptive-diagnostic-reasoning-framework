@@ -44,4 +44,8 @@ Thumbs.db
 
 # Tooling metadata
 .mimosa/
+.coverage
+.agents/
+skills-lock.json
+modules/m7_repository/data/
 

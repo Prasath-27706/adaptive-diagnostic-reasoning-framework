@@ -113,16 +113,34 @@ def create_payment_seed_graph() -> DiagnosticGraph:
         avg_duration_s=15
     )
 
+    dg.add_diagnostic_node(
+        node_id="action:restart_payment_api",
+        label="Remediation: Restart Payment API Pods & Scale Heap",
+        node_type="action",
+        target_service="payment-api",
+        avg_duration_s=12
+    )
+
+    dg.add_diagnostic_node(
+        node_id="action:circuit_breaker_payment_gateway",
+        label="Remediation: Trip Gateway Circuit Breaker & Reroute",
+        node_type="action",
+        target_service="ext-payment-gateway",
+        avg_duration_s=8
+    )
+
     # 5. Connect Edges (Default Static Traversal Order)
     # Entry -> Redundant checklist sweeps (always) -> Payment API checks -> Conditional branch to DB / Auth / External
     dg.add_decision_edge("entry:payment-api:error_rate", "check:frontend:cpu_utilization", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:frontend:cpu_utilization", "check:network:packet_loss", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:network:packet_loss", "check:payment-api:p99_latency", priority_weight=1.0, condition="always")
+    dg.add_decision_edge("check:payment-api:p99_latency", "action:restart_payment_api", priority_weight=0.9, condition="on_anomaly")
     dg.add_decision_edge("check:payment-api:p99_latency", "check:payment-db:connection_pool", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:payment-api:p99_latency", "check:auth-svc:token_validation", priority_weight=0.8, condition="always")
     dg.add_decision_edge("check:payment-api:p99_latency", "check:ext-payment-gateway:status", priority_weight=0.7, condition="always")
     dg.add_decision_edge("check:payment-db:connection_pool", "check:payment-db:query_latency", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:payment-db:connection_pool", "action:expand_db_connection_pool", priority_weight=1.0, condition="on_anomaly")
     dg.add_decision_edge("check:auth-svc:token_validation", "action:restart_auth_service", priority_weight=1.0, condition="on_anomaly")
+    dg.add_decision_edge("check:ext-payment-gateway:status", "action:circuit_breaker_payment_gateway", priority_weight=1.0, condition="on_anomaly")
 
     return dg

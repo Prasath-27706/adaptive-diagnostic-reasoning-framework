@@ -1,42 +1,49 @@
 {
-  "timestamp": "2026-09-07T15:57:59.049057+00:00",
+  "timestamp": "2026-10-05T14:09:10.509409+00:00",
   "total_incidents": 20,
   "batch_size": 5,
-  "mode": "floci",
+  "mode": "synthetic",
   "initial_mttr_s": 89.0,
-  "final_mttr_s": 82.0,
-  "mttr_reduction_s": 7.0,
-  "mttr_reduction_pct": 7.87,
+  "final_mttr_s": 85.0,
+  "mttr_reduction_s": 4.0,
+  "mttr_reduction_pct": 4.49,
   "initial_nodes": 10,
-  "final_nodes": 7,
-  "approved_mutations_count": 3,
+  "final_nodes": 6,
+  "approved_mutations_count": 4,
   "evolution_logs": [
     {
       "batch": 1,
-      "transformation": "REMOVE:action:expand_db_connection_pool",
-      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool",
+      "transformation": "REMOVE:entry:payment-api:error_rate",
+      "version_id": "seed-v1.0.0-rem-error_rate",
       "score": 0.4992,
       "verification": "APPROVED"
     },
     {
       "batch": 2,
-      "transformation": "REMOVE:action:restart_auth_service",
-      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "transformation": "REMOVE:action:expand_db_connection_pool",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool",
       "score": 0.5199,
       "verification": "APPROVED"
     },
     {
       "batch": 3,
+      "transformation": "REMOVE:action:restart_auth_service",
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service",
+      "score": 0.5453,
+      "verification": "APPROVED"
+    },
+    {
+      "batch": 4,
       "transformation": "REMOVE:check:network:packet_loss",
-      "version_id": "seed-v1.0.0-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
-      "score": 0.5444,
+      "version_id": "seed-v1.0.0-rem-error_rate-rem-expand_db_connection_pool-rem-restart_auth_service-rem-packet_loss",
+      "score": 0.5768,
       "verification": "APPROVED"
     }
   ],
   "batch_mttr_history": [
     89.0,
-    90.0,
-    87.0,
-    82.0
+    85.0,
+    91.0,
+    85.0
   ]
 }
