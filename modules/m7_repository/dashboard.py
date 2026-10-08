@@ -416,6 +416,12 @@ def trigger_evolution_step():
     # 1. Gather traces
     if st.session_state.analysis_result and "decision_trace" in st.session_state.analysis_result:
         traces = [st.session_state.analysis_result["decision_trace"]]
+    elif st.session_state.active_incident:
+        analyzer = IncidentAnalyzer()
+        st_c, g_d, _, _ = call_backend("/graph/latest")
+        cur_g = DiagnosticGraph.from_dict(g_d) if (st_c == 200 and "nodes" in g_d) else create_payment_seed_graph()
+        sim_res = analyzer.analyze_incident(cur_g, st.session_state.active_incident)
+        traces = [sim_res["decision_trace"]]
     else:
         analyzer = IncidentAnalyzer()
         sim_res = analyzer.analyze_incident(create_payment_seed_graph(), {
@@ -460,23 +466,39 @@ def trigger_evolution_step():
     new_nodes = save_res.get("nodes", len(cand_graph.get("nodes", [])))
 
     # Format human-readable mutation description
-    if "cpu_utilization" in transform:
+    if "lock_contention" in transform:
+        mutation_desc = "Inject Deep Hypothesis: PostgreSQL Lock Contention Analysis"
+    elif "jwt_jwks" in transform or "jwks_cache" in transform:
+        mutation_desc = "Inject Deep Hypothesis: Auth0 JWKS Public Key Cache Eviction"
+    elif "tls_handshake" in transform:
+        mutation_desc = "Inject Deep Hypothesis: Stripe Acquirer TLS Handshake Timeout"
+    elif "jvm_heap" in transform or "heap_exhaustion" in transform:
+        mutation_desc = "Inject Deep Hypothesis: JVM Container Heap Pressure Probe"
+    elif "cpu_utilization" in transform:
         mutation_desc = "Prune Redundant Check (Frontend CPU Saturation)"
     elif "packet_loss" in transform or "network" in transform:
         mutation_desc = "Prune Redundant Check (Gateway Network Packet Loss)"
     elif "connection_pool" in transform:
-        mutation_desc = "Prioritize High-Yield Check (DB Connection Pool)"
+        mutation_desc = "Prioritize Critical Probe (RDS DB Connection Pool)"
+    elif "token_validation" in transform:
+        mutation_desc = "Prioritize Critical Probe (Auth Token Validation Latency)"
+    elif "timeout_rate" in transform or "ext-payment-gateway" in transform:
+        mutation_desc = "Prioritize Critical Probe (Stripe Ingress Timeout Rate)"
     elif "REMOVE" in transform:
         node_name = transform.split(":")[-1].replace("_", " ").title()
         mutation_desc = f"Prune Redundant Check ({node_name})"
     elif "REORDER" in transform:
         node_name = transform.split(":")[-1].replace("_", " ").title()
         mutation_desc = f"Prioritize Diagnostic Check ({node_name})"
+    elif "ADD" in transform:
+        node_name = transform.split(":")[-1].replace("_", " ").title()
+        mutation_desc = f"Inject Deep Hypothesis Check ({node_name})"
     else:
         mutation_desc = transform
 
     prev_mttr = st.session_state.evolution_history[-1]["mttr_s"]
     new_mttr = round(max(68.0, prev_mttr * 0.915), 1)
+
 
     st.session_state.evolution_history.append({
         "version_id": new_v,
@@ -934,68 +956,96 @@ with tab_live:
         """, unsafe_allow_html=True)
 
     if diag_render_engine == "⚡ Archify Architecture Flow":
-        # Build Archify-style Interactive SVG Architecture Flow
+        # Build Editorial SVG Architecture Flow (incorporating diagram-design principles)
+        SVG_ICONS = {
+            "gateway": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>',
+            "db": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+            "auth": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2"/></svg>',
+            "api": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+            "ext": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+            "action": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+            "alert": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+            "web": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+            "deep": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+        }
+
         node_specs = {
             "entry:payment-api:error_rate": {
-                "x": 25, "y": 220, "w": 175, "h": 62,
-                "badge": "INGRESS ALERT", "icon": "🌐", "svc": "PAYMENT-API", "metric": "High 5xx Error Rate"
+                "x": 24, "y": 230, "w": 180, "h": 60,
+                "badge": "INGRESS ALERT", "icon_type": "alert", "svc": "PAYMENT-API", "metric": "High 5xx Error Rate"
             },
             "check:frontend:cpu_utilization": {
-                "x": 245, "y": 130, "w": 175, "h": 62,
-                "badge": "PERIMETER CHECK", "icon": "🖥️", "svc": "FRONTEND WEB", "metric": "CPU Saturation Check"
+                "x": 244, "y": 140, "w": 180, "h": 60,
+                "badge": "PERIMETER CHECK", "icon_type": "web", "svc": "FRONTEND WEB", "metric": "CPU Saturation Check"
             },
             "check:network:packet_loss": {
-                "x": 245, "y": 310, "w": 175, "h": 62,
-                "badge": "PERIMETER CHECK", "icon": "🔀", "svc": "CORE GATEWAY", "metric": "Network Packet Loss"
+                "x": 244, "y": 320, "w": 180, "h": 60,
+                "badge": "PERIMETER CHECK", "icon_type": "gateway", "svc": "CORE GATEWAY", "metric": "Network Packet Loss"
             },
             "check:payment-api:p99_latency": {
-                "x": 465, "y": 220, "w": 175, "h": 62,
-                "badge": "CORE PROBE", "icon": "⚡", "svc": "PAYMENT-API", "metric": "p99 Latency Anomaly"
+                "x": 464, "y": 230, "w": 180, "h": 60,
+                "badge": "CORE PROBE", "icon_type": "api", "svc": "PAYMENT-API", "metric": "p99 Latency Anomaly"
+            },
+            "check:payment-api:jvm_heap_exhaustion": {
+                "x": 464, "y": 140, "w": 180, "h": 60,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-API", "metric": "Container Heap Saturation"
             },
             "check:auth-svc:token_validation": {
-                "x": 685, "y": 70, "w": 175, "h": 62,
-                "badge": "CORE PROBE", "icon": "🔐", "svc": "AUTH-SVC", "metric": "Token Validation Time"
+                "x": 684, "y": 60, "w": 180, "h": 60,
+                "badge": "CORE PROBE", "icon_type": "auth", "svc": "AUTH-SVC", "metric": "Token Validation Time"
+            },
+            "check:auth-svc:jwt_jwks_cache": {
+                "x": 684, "y": 130, "w": 180, "h": 60,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "AUTH-SVC", "metric": "JWKS Key Cache Eviction"
             },
             "check:payment-db:connection_pool": {
-                "x": 685, "y": 245, "w": 175, "h": 62,
-                "badge": "CORE PROBE", "icon": "🗄️", "svc": "PAYMENT-DB", "metric": "DB Connection Pool"
-            },
-            "check:ext-payment-gateway:status": {
-                "x": 685, "y": 415, "w": 175, "h": 62,
-                "badge": "CORE PROBE", "icon": "💳", "svc": "EXT GATEWAY", "metric": "HTTP 504 Timeout Rate"
-            },
-            "action:restart_auth_service": {
-                "x": 905, "y": 70, "w": 210, "h": 62,
-                "badge": "REMEDIATION ACTION", "icon": "🛠️", "svc": "AUTH-SVC", "metric": "Restart Auth Pods"
-            },
-            "action:restart_payment_api": {
-                "x": 905, "y": 155, "w": 210, "h": 62,
-                "badge": "REMEDIATION ACTION", "icon": "🛠️", "svc": "PAYMENT-API", "metric": "Restart Pods & Scale RAM"
+                "x": 684, "y": 210, "w": 180, "h": 60,
+                "badge": "CORE PROBE", "icon_type": "db", "svc": "PAYMENT-DB", "metric": "DB Connection Pool"
             },
             "check:payment-db:query_latency": {
-                "x": 905, "y": 245, "w": 210, "h": 62,
-                "badge": "DEEP PROBE", "icon": "🔍", "svc": "PAYMENT-DB", "metric": "Slow Query Latency"
+                "x": 684, "y": 280, "w": 180, "h": 60,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Slow Query Latency"
+            },
+            "check:payment-db:lock_contention": {
+                "x": 684, "y": 350, "w": 180, "h": 60,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Row Lock Contention"
+            },
+            "check:ext-payment-gateway:status": {
+                "x": 684, "y": 420, "w": 180, "h": 60,
+                "badge": "CORE PROBE", "icon_type": "ext", "svc": "EXT GATEWAY", "metric": "HTTP 504 Timeout Rate"
+            },
+            "check:ext-payment-gateway:tls_handshake": {
+                "x": 684, "y": 490, "w": 180, "h": 60,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "EXT GATEWAY", "metric": "Acquirer TLS Handshake"
+            },
+            "action:restart_auth_service": {
+                "x": 924, "y": 70, "w": 200, "h": 60,
+                "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "AUTH-SVC", "metric": "Restart Auth Pods"
+            },
+            "action:restart_payment_api": {
+                "x": 924, "y": 155, "w": 200, "h": 60,
+                "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-API", "metric": "Restart Pods & Scale RAM"
             },
             "action:expand_db_connection_pool": {
-                "x": 905, "y": 330, "w": 210, "h": 62,
-                "badge": "REMEDIATION ACTION", "icon": "🛠️", "svc": "PAYMENT-DB", "metric": "Scale Connection Pool"
+                "x": 924, "y": 280, "w": 200, "h": 60,
+                "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-DB", "metric": "Scale Connection Pool"
             },
             "action:circuit_breaker_payment_gateway": {
-                "x": 905, "y": 415, "w": 210, "h": 62,
-                "badge": "REMEDIATION ACTION", "icon": "🛠️", "svc": "EXT GATEWAY", "metric": "Trip Gateway Circuit"
+                "x": 924, "y": 420, "w": 200, "h": 60,
+                "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "EXT GATEWAY", "metric": "Trip Gateway Circuit"
             }
         }
 
         render_nodes = [n for n in G.nodes() if n in node_specs]
         if is_focused and active_root_svc:
             if active_root_svc == "payment-db":
-                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-db:connection_pool", "check:payment-db:query_latency", "action:expand_db_connection_pool"}
+                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-db:connection_pool", "check:payment-db:query_latency", "check:payment-db:lock_contention", "action:expand_db_connection_pool"}
             elif active_root_svc == "auth-svc":
-                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:auth-svc:token_validation", "action:restart_auth_service"}
+                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:auth-svc:token_validation", "check:auth-svc:jwt_jwks_cache", "action:restart_auth_service"}
             elif active_root_svc == "ext-payment-gateway":
-                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:ext-payment-gateway:status", "action:circuit_breaker_payment_gateway"}
+                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:ext-payment-gateway:status", "check:ext-payment-gateway:tls_handshake", "action:circuit_breaker_payment_gateway"}
             else:
-                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "action:restart_payment_api"}
+                keep = {"entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-api:jvm_heap_exhaustion", "action:restart_payment_api"}
             render_nodes = [n for n in render_nodes if n in keep]
 
         # Generate Edges
@@ -1019,7 +1069,7 @@ with tab_live:
                     d = f"M {x1} {y1} C {x1 + dx} {y1}, {x2 - dx} {y2}, {x2} {y2}"
                 edge_svg_lines.append(f'<path d="{d}" class="{cls}" marker-end="{marker}"/>')
 
-        # Generate Node Cards
+        # Generate Node Cards (diagram-design editorial styling)
         node_svg_cards = []
         for nid in render_nodes:
             info = node_specs[nid]
@@ -1031,39 +1081,60 @@ with tab_live:
             label = node_data.get("label", nid)
 
             if outcome == "anomaly":
-                status_text = "ROOT CAUSE"
-                status_bg = "#7f1d1d"
+                status_text = "FOCAL ROOT"
+                status_bg = "#3b1219"
                 status_fg = "#fca5a5"
-                border_color = "#ef4444"
-                card_class = "node-card pulse-anomaly"
+                border_color = "#f43f5e"
+                card_fill = "#240b10"
+                icon_color = "#f43f5e"
+                title_color = "#fecdd3"
+                metric_color = "#fda4af"
+                card_class = "node-card pulse-focal"
             elif outcome == "proposed" or info["badge"] == "REMEDIATION ACTION":
                 status_text = "REMEDIATION" if is_traversed else "ACTION"
-                status_bg = "#064e3b"
+                status_bg = "#064e3b" if is_traversed else "#063726"
                 status_fg = "#6ee7b7"
                 border_color = "#10b981"
+                card_fill = "#062319" if is_traversed else "#091c15"
+                icon_color = "#34d399"
+                title_color = "#d1fae5"
+                metric_color = "#6ee7b7"
                 card_class = "node-card glow-green" if is_traversed else "node-card"
             elif is_traversed:
                 status_text = "PASS"
                 status_bg = "#0c4a6e"
                 status_fg = "#7dd3fc"
-                border_color = "#38bdf8"
+                border_color = "#0284c7"
+                card_fill = "#081b2e"
+                icon_color = "#38bdf8"
+                title_color = "#e0f2fe"
+                metric_color = "#93c5fd"
                 card_class = "node-card glow-blue"
             else:
                 status_text = "IDLE"
                 status_bg = "#1e293b"
                 status_fg = "#64748b"
                 border_color = "#1f293d"
+                card_fill = "#111827"
+                icon_color = "#64748b"
+                title_color = "#cbd5e1"
+                metric_color = "#94a3b8"
                 card_class = "node-card"
+
+            icon_html = SVG_ICONS.get(info.get("icon_type", "api"), SVG_ICONS["api"])
 
             node_svg_cards.append(f"""
             <g class="{card_class}">
                 <title>{label}&#10;Target: {info['svc']}&#10;Metric: {info['metric']}&#10;Shannon Info Gain: {ig:.3f} bits</title>
-                <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="#111827" stroke="{border_color}" stroke-width="1.8"/>
-                <text x="{x + 10}" y="{y + 20}" font-size="10.5" font-weight="700" fill="#cbd5e1">{info['icon']} {info['svc']}</text>
-                <rect x="{x + w - 74}" y="{y + 9}" width="66" height="15" rx="3" fill="{status_bg}"/>
-                <text x="{x + w - 41}" y="{y + 20}" font-size="8" font-weight="700" fill="{status_fg}" text-anchor="middle">{status_text}</text>
-                <text x="{x + 10}" y="{y + 40}" font-size="9.5" fill="#94a3b8">{info['metric']}</text>
-                <text x="{x + 10}" y="{y + 53}" font-size="8" fill="#475569" font-family="'JetBrains Mono', monospace">IG: {ig:.2f}b • {nid.split(':')[-1][:18]}</text>
+                <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{card_fill}" stroke="{border_color}" stroke-width="1"/>
+                <g transform="translate({x + 9}, {y + 9})" stroke="{icon_color}">
+                    {icon_html}
+                </g>
+                <text x="{x + 28}" y="{y + 20}" font-size="10" font-weight="700" letter-spacing="0.5" fill="{title_color}">{info['svc']}</text>
+                <rect x="{x + w - 74}" y="{y + 8}" width="66" height="15" rx="3" fill="{status_bg}"/>
+                <text x="{x + w - 41}" y="{y + 19}" font-size="7.5" font-weight="700" font-family="'Geist Mono', 'JetBrains Mono', monospace" fill="{status_fg}" text-anchor="middle">{status_text}</text>
+                <text x="{x + 10}" y="{y + 38}" font-size="9" font-family="'Geist Mono', 'JetBrains Mono', monospace" fill="{metric_color}">{info['metric']}</text>
+                <text x="{x + 10}" y="{y + 50}" font-size="7.5" fill="#475569" font-family="'Geist Mono', 'JetBrains Mono', monospace">IG: {ig:.2f}b • {nid.split(':')[-1][:18]}</text>
             </g>
             """)
 
@@ -1074,9 +1145,9 @@ with tab_live:
         <style>
             body {{ margin: 0; padding: 0; background: transparent; font-family: 'Inter', -apple-system, sans-serif; }}
             svg {{ display: block; width: 100%; height: auto; }}
-            .edge-idle {{ stroke: #1e293d; stroke-width: 1.6; fill: none; }}
+            .edge-idle {{ stroke: #1e293d; stroke-width: 1.5; fill: none; }}
             .edge-active {{
-                stroke: #38bdf8; stroke-width: 2.8; fill: none;
+                stroke: #38bdf8; stroke-width: 2.6; fill: none;
                 stroke-dasharray: 6 4;
                 animation: flowDash 1.2s linear infinite;
             }}
@@ -1086,16 +1157,16 @@ with tab_live:
             }}
             .node-card {{ cursor: pointer; transition: transform 0.2s; }}
             .node-card:hover {{ transform: translateY(-2px); }}
-            .pulse-anomaly {{
-                animation: pulseAnom 2s infinite;
+            .pulse-focal {{
+                animation: pulseFocal 2s infinite;
             }}
-            @keyframes pulseAnom {{
-                0% {{ filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.4)); }}
-                50% {{ filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.9)); }}
-                100% {{ filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.4)); }}
+            @keyframes pulseFocal {{
+                0% {{ filter: drop-shadow(0 0 2px rgba(244, 63, 94, 0.4)); }}
+                50% {{ filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.8)); }}
+                100% {{ filter: drop-shadow(0 0 2px rgba(244, 63, 94, 0.4)); }}
             }}
             .glow-green {{
-                filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
+                filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
             }}
             .glow-blue {{
                 filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
@@ -1103,7 +1174,7 @@ with tab_live:
         </style>
         </head>
         <body>
-        <svg viewBox="0 0 1145 510" width="100%" height="510">
+        <svg viewBox="0 0 1150 560" width="100%" height="560">
             <defs>
                 <pattern id="gridDots" width="20" height="20" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
@@ -1119,11 +1190,11 @@ with tab_live:
             <rect width="100%" height="100%" fill="url(#gridDots)" rx="8"/>
             
             <!-- Column Architecture Header Labels -->
-            <text x="25" y="32" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 1: INGRESS</text>
-            <text x="245" y="32" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 2: PERIMETER</text>
-            <text x="465" y="32" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 3: INGRESS PROBE</text>
-            <text x="685" y="32" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 4: DOWNSTREAM</text>
-            <text x="905" y="32" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 5: ACTIONS & DEEP PROBE</text>
+            <text x="24" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 1: INGRESS ALERT</text>
+            <text x="244" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 2: PERIMETER PROBES</text>
+            <text x="464" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 3: INGRESS ANOMALY PROBE</text>
+            <text x="684" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 4: MICROSERVICE DIAGNOSTICS</text>
+            <text x="924" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 5: REMEDIATION ACTIONS</text>
 
             <!-- Edges Layer -->
             {''.join(edge_svg_lines)}
@@ -1134,13 +1205,13 @@ with tab_live:
         </body>
         </html>
         """
-        st.components.v1.html(svg_content, height=530, scrolling=False)
+        st.components.v1.html(svg_content, height=580, scrolling=False)
 
     else:
         # Build Mathematical DAG Coordinate View via Plotly
         if is_focused and active_root_svc:
             if active_root_svc == "payment-db":
-                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-db:connection_pool", "check:payment-db:query_latency", "action:expand_db_connection_pool"]
+                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-db:connection_pool", "check:payment-db:query_latency", "check:payment-db:lock_contention", "action:expand_db_connection_pool"]
                 node_coords = {
                     "entry:payment-api:error_rate": (1.0, 3.0),
                     "check:frontend:cpu_utilization": (2.8, 3.8),
@@ -1148,35 +1219,39 @@ with tab_live:
                     "check:payment-api:p99_latency": (4.6, 3.0),
                     "check:payment-db:connection_pool": (6.6, 3.0),
                     "check:payment-db:query_latency": (8.6, 3.8),
+                    "check:payment-db:lock_contention": (8.6, 3.0),
                     "action:expand_db_connection_pool": (8.6, 2.2)
                 }
             elif active_root_svc == "auth-svc":
-                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:auth-svc:token_validation", "action:restart_auth_service"]
+                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:auth-svc:token_validation", "check:auth-svc:jwt_jwks_cache", "action:restart_auth_service"]
                 node_coords = {
                     "entry:payment-api:error_rate": (1.0, 3.0),
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
                     "check:auth-svc:token_validation": (6.6, 3.0),
-                    "action:restart_auth_service": (8.6, 3.0)
+                    "check:auth-svc:jwt_jwks_cache": (8.6, 3.8),
+                    "action:restart_auth_service": (8.6, 2.2)
                 }
             elif active_root_svc == "ext-payment-gateway":
-                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:ext-payment-gateway:status", "action:circuit_breaker_payment_gateway"]
+                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:ext-payment-gateway:status", "check:ext-payment-gateway:tls_handshake", "action:circuit_breaker_payment_gateway"]
                 node_coords = {
                     "entry:payment-api:error_rate": (1.0, 3.0),
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
                     "check:ext-payment-gateway:status": (6.6, 3.0),
-                    "action:circuit_breaker_payment_gateway": (8.6, 3.0)
+                    "check:ext-payment-gateway:tls_handshake": (8.6, 3.8),
+                    "action:circuit_breaker_payment_gateway": (8.6, 2.2)
                 }
             else:
-                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "action:restart_payment_api"]
+                sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-api:jvm_heap_exhaustion", "action:restart_payment_api"]
                 node_coords = {
                     "entry:payment-api:error_rate": (1.0, 3.0),
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
+                    "check:payment-api:jvm_heap_exhaustion": (6.6, 3.8),
                     "action:restart_payment_api": (8.6, 3.0)
                 }
             target_nodes = [n for n in sub_nodes if G.has_node(n)]
@@ -1189,9 +1264,13 @@ with tab_live:
                 "check:frontend:cpu_utilization": (2.8, 4.0),
                 "check:network:packet_loss": (2.8, 2.0),
                 "check:payment-api:p99_latency": (4.8, 3.0),
+                "check:payment-api:jvm_heap_exhaustion": (4.8, 4.2),
                 "check:auth-svc:token_validation": (6.8, 4.5),
+                "check:auth-svc:jwt_jwks_cache": (6.8, 3.8),
                 "check:payment-db:connection_pool": (6.8, 3.0),
+                "check:payment-db:lock_contention": (6.8, 2.3),
                 "check:ext-payment-gateway:status": (6.8, 1.5),
+                "check:ext-payment-gateway:tls_handshake": (6.8, 0.8),
                 "action:restart_auth_service": (8.8, 4.5),
                 "action:restart_payment_api": (8.8, 3.7),
                 "check:payment-db:query_latency": (8.8, 3.0),
@@ -1199,6 +1278,7 @@ with tab_live:
                 "action:circuit_breaker_payment_gateway": (8.8, 1.5)
             }
             graph_title = f"Full Diagnostic Reasoning DAG Topology ({active_dg.version_id} • {len(target_nodes)} Live Nodes)"
+
 
         fig_net = go.Figure()
         for u, v in G.edges():

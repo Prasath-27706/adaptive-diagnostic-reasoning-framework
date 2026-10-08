@@ -94,11 +94,57 @@ class ExperienceExtractor:
             reverse=True
         )
 
+        # Identify anomalous services to recommend deep diagnostic hypothesis additions
+        anomalous_services = set()
+        for nid, stats in summary_nodes.items():
+            if stats["anomaly_count"] > 0:
+                anomalous_services.add(stats["target_service"])
+
+        suggested_additions = []
+        if "payment-db" in anomalous_services:
+            suggested_additions.append({
+                "node_id": "check:payment-db:lock_contention",
+                "label": "Check PostgreSQL Row Lock Contention",
+                "node_type": "check",
+                "target_service": "payment-db",
+                "target_metric": "lock_contention",
+                "parent_id": "check:payment-db:connection_pool"
+            })
+        if "auth-svc" in anomalous_services:
+            suggested_additions.append({
+                "node_id": "check:auth-svc:jwt_jwks_cache",
+                "label": "Check Auth0 JWKS Public Key Cache Eviction",
+                "node_type": "check",
+                "target_service": "auth-svc",
+                "target_metric": "jwt_jwks_cache",
+                "parent_id": "check:auth-svc:token_validation"
+            })
+        if "ext-payment-gateway" in anomalous_services:
+            suggested_additions.append({
+                "node_id": "check:ext-payment-gateway:tls_handshake",
+                "label": "Probe Stripe Upstream TLS Handshake Latency",
+                "node_type": "check",
+                "target_service": "ext-payment-gateway",
+                "target_metric": "tls_handshake",
+                "parent_id": "check:ext-payment-gateway:status"
+            })
+        if "payment-api" in anomalous_services:
+            suggested_additions.append({
+                "node_id": "check:payment-api:jvm_heap_exhaustion",
+                "label": "Check Container Cgroup & JVM Heap Saturation",
+                "node_type": "check",
+                "target_service": "payment-api",
+                "target_metric": "jvm_heap_exhaustion",
+                "parent_id": "check:payment-api:p99_latency"
+            })
+
         return {
             "total_incidents_analyzed": len(decision_traces),
             "unique_nodes_evaluated": len(summary_nodes),
             "redundant_nodes": redundant_nodes,
             "high_value_nodes": high_value_nodes,
             "reorder_recommendations": [n["node_id"] for n in reorder_recommendations],
+            "suggested_additions": suggested_additions,
             "node_statistics": summary_nodes
         }
+

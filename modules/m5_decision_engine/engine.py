@@ -52,7 +52,26 @@ class EvolutionEngine:
                 score_info = self.scorer.score_candidate(mutated_graph, experience_record)
                 candidates.append((mutated_graph, f"REORDER:{hv_node}", score_info))
 
+        # 4. Generate ADD Candidate Mutations (Deep Scenario-Specific Diagnostic Probes)
+        suggested_additions = experience_record.get("suggested_additions", [])
+        for add_spec in suggested_additions:
+            node_id = add_spec["node_id"]
+            if not current_graph.graph.has_node(node_id):
+                parent_id = add_spec.get("parent_id", "entry:payment-api:error_rate")
+                mutated_graph = apply_add_mutation(
+                    current_graph,
+                    node_id=node_id,
+                    label=add_spec.get("label", node_id),
+                    node_type=add_spec.get("node_type", "check"),
+                    target_service=add_spec.get("target_service", "unknown"),
+                    target_metric=add_spec.get("target_metric", "unknown"),
+                    parent_id=parent_id
+                )
+                score_info = self.scorer.score_candidate(mutated_graph, experience_record)
+                candidates.append((mutated_graph, f"ADD:{node_id}", score_info))
+
         # Sort candidates by score descending
+
         sorted_candidates = sorted(candidates, key=lambda x: x[2]["score"], reverse=True)
         top_graph, top_action, top_score_info = sorted_candidates[0]
 
