@@ -507,8 +507,144 @@ tab_live, tab_safety, tab_evolve, tab_audit = st.tabs([
 # TAB 1: LIVE CLUSTER & OUTAGE TRIAGE
 # =============================================================================
 with tab_live:
-    # 1. Action Controls
-    st.markdown("<div class='section-title'>⚙️ Outage Simulation & Incident Triage Controls</div>", unsafe_allow_html=True)
+    # 1. Microservice Topology Cards (Top Ingress Flow)
+    st.markdown("<div class='section-title'>🌐 Payment Request Flow & Microservice Topology</div>", unsafe_allow_html=True)
+    
+    is_outage = (st.session_state.cluster_status in ["OUTAGE_ACTIVE", "INVESTIGATED"])
+    active_root_svc = st.session_state.active_incident["root_cause"]["service"] if (is_outage and st.session_state.active_incident) else None
+
+    # Service state determinations
+    is_gw_affected = is_outage and (active_root_svc == "payment-api")
+    is_api_affected = is_outage
+    is_auth_affected = is_outage and (active_root_svc == "auth-svc")
+    is_db_affected = is_outage and (active_root_svc == "payment-db")
+    is_ext_affected = is_outage and (active_root_svc == "ext-payment-gateway")
+
+    col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
+
+    with col_s1:
+        if is_gw_affected:
+            st.markdown("""
+            <div class="service-box service-box-degraded">
+                <div class="service-name"><span>api-gateway</span><span class="pill pill-amber">502 BAD GW</span></div>
+                <div class="service-stat-line">Upstream Err: 55.4%</div>
+                <div class="service-stat-line">Latency: 2,800ms (p99)</div>
+                <div class="service-stat-line">Retries: Max Limit (5/5)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="service-box service-box-healthy">
+                <div class="service-name"><span>api-gateway</span><span class="pill pill-green">200 OK</span></div>
+                <div class="service-stat-line">Port: 443 • HTTPS/2</div>
+                <div class="service-stat-line">Latency: 18ms (p95)</div>
+                <div class="service-stat-line">Replicas: 4 Pods</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col_s2:
+        if is_outage:
+            if active_root_svc == "payment-api":
+                api_pill = "<span class='pill pill-red'>OOM CRASH</span>"
+                api_l1 = "HTTP 5xx: 55.4% (CRITICAL)"
+                api_l2 = "RAM: 99.8% (Heap Sat)"
+                api_l3 = "Replicas: 1/4 (CrashLoop)"
+            elif active_root_svc == "auth-svc":
+                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
+                api_l1 = "Latency: 4,920ms (Auth Hang)"
+                api_l2 = "Blocked on Auth: 92%"
+                api_l3 = "Error Rate: 38.5%"
+            elif active_root_svc == "payment-db":
+                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
+                api_l1 = "Latency: 3,420ms (DB Wait)"
+                api_l2 = "Error Rate: 44.2%"
+                api_l3 = "Pool Wait: 3,120ms"
+            else:  # ext-payment-gateway
+                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
+                api_l1 = "Latency: 5,100ms (Acquirer Hang)"
+                api_l2 = "Error Rate: 41.2%"
+                api_l3 = "Gateway Timeout: 88%"
+            
+            st.markdown(f"""
+            <div class="service-box service-box-critical">
+                <div class="service-name"><span>payment-api</span>{api_pill}</div>
+                <div class="service-stat-line">{api_l1}</div>
+                <div class="service-stat-line">{api_l2}</div>
+                <div class="service-stat-line">{api_l3}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="service-box service-box-healthy">
+                <div class="service-name"><span>payment-api</span><span class="pill pill-green">200 OK</span></div>
+                <div class="service-stat-line">Latency: 38ms (p95)</div>
+                <div class="service-stat-line">Error Rate: 0.01%</div>
+                <div class="service-stat-line">Replicas: 4 Pods</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col_s3:
+        if is_auth_affected:
+            st.markdown("""
+            <div class="service-box service-box-critical">
+                <div class="service-name"><span>auth-svc</span><span class="pill pill-red">TIMEOUT (4.8s)</span></div>
+                <div class="service-stat-line">Validation: 4,800ms</div>
+                <div class="service-stat-line">Token Backlog: 1,420</div>
+                <div class="service-stat-line">Replicas: 3 Pods (Hung)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="service-box service-box-healthy">
+                <div class="service-name"><span>auth-svc</span><span class="pill pill-green">200 OK</span></div>
+                <div class="service-stat-line">Auth Rate: 99.9%</div>
+                <div class="service-stat-line">Token Latency: 42ms</div>
+                <div class="service-stat-line">Replicas: 3 Pods</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col_s4:
+        if is_db_affected:
+            st.markdown("""
+            <div class="service-box service-box-critical">
+                <div class="service-name"><span>payment-db</span><span class="pill pill-red">POOL FULL (98%)</span></div>
+                <div class="service-stat-line">Pool: 98 / 100 Conns</div>
+                <div class="service-stat-line">Query Wait: 3,120ms</div>
+                <div class="service-stat-line">PostgreSQL 15 (RDS)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="service-box service-box-healthy">
+                <div class="service-name"><span>payment-db</span><span class="pill pill-green">OPTIMAL</span></div>
+                <div class="service-stat-line">Pool: 12 / 100 Conns</div>
+                <div class="service-stat-line">Query Wait: 8ms</div>
+                <div class="service-stat-line">PostgreSQL 15 (RDS)</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col_s5:
+        if is_ext_affected:
+            st.markdown("""
+            <div class="service-box service-box-critical">
+                <div class="service-name"><span>ext-payment-gateway</span><span class="pill pill-red">88% TIMEOUT</span></div>
+                <div class="service-stat-line">Socket Hang: 5,000ms</div>
+                <div class="service-stat-line">Timeout Rate: 88.0%</div>
+                <div class="service-stat-line">Provider: Stripe (Down)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="service-box service-box-healthy">
+                <div class="service-name"><span>ext-payment-gateway</span><span class="pill pill-green">200 OK</span></div>
+                <div class="service-stat-line">Timeout Rate: 0.1%</div>
+                <div class="service-stat-line">Latency: 180ms</div>
+                <div class="service-stat-line">Provider: Stripe (Active)</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # 2. Outage Simulation & Incident Triage Controls
+    st.markdown("<div class='section-title' style='margin-top: 20px;'>⚙️ Outage Simulation & Incident Triage Controls</div>", unsafe_allow_html=True)
     
     ctrl_col1, ctrl_col2, ctrl_col3, ctrl_col4 = st.columns([2.6, 1.8, 1.8, 1.2])
 
@@ -719,207 +855,7 @@ with tab_live:
             log_event("Cluster state manually reset to baseline operational seed.")
             st.rerun()
 
-    # 2. Microservice Topology Cards
-    st.markdown("<div class='section-title'>🌐 Payment Request Flow & Microservice Topology</div>", unsafe_allow_html=True)
-    
-    is_outage = (st.session_state.cluster_status in ["OUTAGE_ACTIVE", "INVESTIGATED"])
-    active_root_svc = st.session_state.active_incident["root_cause"]["service"] if (is_outage and st.session_state.active_incident) else None
-
-    # Service state determinations
-    is_gw_affected = is_outage and (active_root_svc == "payment-api")
-    is_api_affected = is_outage
-    is_auth_affected = is_outage and (active_root_svc == "auth-svc")
-    is_db_affected = is_outage and (active_root_svc == "payment-db")
-    is_ext_affected = is_outage and (active_root_svc == "ext-payment-gateway")
-
-    col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
-
-    with col_s1:
-        if is_gw_affected:
-            st.markdown("""
-            <div class="service-box service-box-degraded">
-                <div class="service-name"><span>api-gateway</span><span class="pill pill-amber">502 BAD GW</span></div>
-                <div class="service-stat-line">Upstream Err: 55.4%</div>
-                <div class="service-stat-line">Latency: 2,800ms (p99)</div>
-                <div class="service-stat-line">Retries: Max Limit (5/5)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="service-box service-box-healthy">
-                <div class="service-name"><span>api-gateway</span><span class="pill pill-green">200 OK</span></div>
-                <div class="service-stat-line">Port: 443 • HTTPS/2</div>
-                <div class="service-stat-line">Latency: 18ms (p95)</div>
-                <div class="service-stat-line">Replicas: 4 Pods</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    with col_s2:
-        if is_outage:
-            if active_root_svc == "payment-api":
-                api_pill = "<span class='pill pill-red'>OOM CRASH</span>"
-                api_l1 = "HTTP 5xx: 55.4% (CRITICAL)"
-                api_l2 = "RAM: 99.8% (Heap Sat)"
-                api_l3 = "Replicas: 1/4 (CrashLoop)"
-            elif active_root_svc == "auth-svc":
-                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
-                api_l1 = "Latency: 4,920ms (Auth Hang)"
-                api_l2 = "Blocked on Auth: 92%"
-                api_l3 = "Error Rate: 38.5%"
-            elif active_root_svc == "payment-db":
-                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
-                api_l1 = "Latency: 3,420ms (DB Wait)"
-                api_l2 = "Error Rate: 44.2%"
-                api_l3 = "Pool Wait: 3,120ms"
-            else:  # ext-payment-gateway
-                api_pill = "<span class='pill pill-red'>504 TIMEOUT</span>"
-                api_l1 = "Latency: 5,100ms (Acquirer Hang)"
-                api_l2 = "Error Rate: 41.2%"
-                api_l3 = "Gateway Timeout: 88%"
-            
-            st.markdown(f"""
-            <div class="service-box service-box-critical">
-                <div class="service-name"><span>payment-api</span>{api_pill}</div>
-                <div class="service-stat-line">{api_l1}</div>
-                <div class="service-stat-line">{api_l2}</div>
-                <div class="service-stat-line">{api_l3}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="service-box service-box-healthy">
-                <div class="service-name"><span>payment-api</span><span class="pill pill-green">200 OK</span></div>
-                <div class="service-stat-line">Latency: 38ms (p95)</div>
-                <div class="service-stat-line">Error Rate: 0.01%</div>
-                <div class="service-stat-line">Replicas: 4 Pods</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    with col_s3:
-        if is_auth_affected:
-            st.markdown("""
-            <div class="service-box service-box-critical">
-                <div class="service-name"><span>auth-svc</span><span class="pill pill-red">TIMEOUT (4.8s)</span></div>
-                <div class="service-stat-line">Validation: 4,800ms</div>
-                <div class="service-stat-line">Token Backlog: 1,420</div>
-                <div class="service-stat-line">Replicas: 3 Pods (Hung)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="service-box service-box-healthy">
-                <div class="service-name"><span>auth-svc</span><span class="pill pill-green">200 OK</span></div>
-                <div class="service-stat-line">Auth Rate: 99.9%</div>
-                <div class="service-stat-line">Token Latency: 42ms</div>
-                <div class="service-stat-line">Replicas: 3 Pods</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    with col_s4:
-        if is_db_affected:
-            st.markdown("""
-            <div class="service-box service-box-critical">
-                <div class="service-name"><span>payment-db</span><span class="pill pill-red">POOL FULL (98%)</span></div>
-                <div class="service-stat-line">Pool: 98 / 100 Conns</div>
-                <div class="service-stat-line">Query Wait: 3,120ms</div>
-                <div class="service-stat-line">PostgreSQL 15 (RDS)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="service-box service-box-healthy">
-                <div class="service-name"><span>payment-db</span><span class="pill pill-green">OPTIMAL</span></div>
-                <div class="service-stat-line">Pool: 12 / 100 Conns</div>
-                <div class="service-stat-line">Query Wait: 8ms</div>
-                <div class="service-stat-line">PostgreSQL 15 (RDS)</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    with col_s5:
-        if is_ext_affected:
-            st.markdown("""
-            <div class="service-box service-box-critical">
-                <div class="service-name"><span>ext-payment-gateway</span><span class="pill pill-red">88% TIMEOUT</span></div>
-                <div class="service-stat-line">Socket Hang: 5,000ms</div>
-                <div class="service-stat-line">Timeout Rate: 88.0%</div>
-                <div class="service-stat-line">Provider: Stripe (Down)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="service-box service-box-healthy">
-                <div class="service-name"><span>ext-payment-gateway</span><span class="pill pill-green">200 OK</span></div>
-                <div class="service-stat-line">Timeout Rate: 0.1%</div>
-                <div class="service-stat-line">Latency: 180ms</div>
-                <div class="service-stat-line">Provider: Stripe (Active)</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    # 3. Telemetry Graphs with generous vertical spacing
-    st.markdown("<div class='section-title' style='margin-top: 24px;'>📊 Real-Time Observability Streams (CloudWatch / Prometheus)</div>", unsafe_allow_html=True)
-
-    chart_col1, chart_col2 = st.columns(2)
-
-    now_secs = int(time.time())
-    timestamps = [datetime.fromtimestamp(now_secs - (10 - i) * 15).strftime("%H:%M:%S") for i in range(11)]
-
-    if is_outage:
-        if active_root_svc == "payment-api":
-            err_rates = [0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.02, 18.5, 42.0, 55.4, 55.4]
-            latencies = [38, 41, 39, 42, 40, 39, 41, 1820, 3890, 5200, 5200]
-        elif active_root_svc == "auth-svc":
-            err_rates = [0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.02, 8.5, 24.0, 38.5, 38.5]
-            latencies = [38, 41, 39, 42, 40, 39, 41, 1200, 2900, 4920, 4920]
-        elif active_root_svc == "ext-payment-gateway":
-            err_rates = [0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.02, 11.0, 29.5, 41.2, 41.2]
-            latencies = [38, 41, 39, 42, 40, 39, 41, 1600, 3400, 5100, 5100]
-        else: # payment-db
-            err_rates = [0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.02, 12.5, 34.0, 44.2, 44.2]
-            latencies = [38, 41, 39, 42, 40, 39, 41, 1420, 2890, 3420, 3420]
-    elif st.session_state.cluster_status == "RESOLVED":
-        err_rates = [0.01, 0.01, 0.02, 12.5, 34.0, 44.2, 44.2, 22.0, 4.1, 0.02, 0.01]
-        latencies = [38, 41, 39, 1420, 2890, 3420, 3420, 950, 110, 42, 38]
-    else:
-        err_rates = [0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.02, 0.01, 0.01, 0.02, 0.01]
-        latencies = [38, 41, 39, 42, 40, 39, 41, 40, 39, 41, 38]
-
-    with chart_col1:
-        fig_err = go.Figure()
-        fig_err.add_trace(go.Scatter(
-            x=timestamps, y=err_rates, mode="lines+markers",
-            line=dict(color="#ef4444" if is_outage else "#10b981", width=2.4),
-            marker=dict(size=6), name="5xx Error Rate"
-        ))
-        fig_err.update_layout(
-            title="Payment Ingress HTTP 5xx Error Rate (%)",
-            title_font=dict(size=13, color="#cbd5e1"),
-            paper_bgcolor="#111827", plot_bgcolor="#111827",
-            height=250, margin=dict(l=45, r=25, t=40, b=30),
-            xaxis=dict(showgrid=True, gridcolor="#1f293d", tickfont=dict(color="#64748b", size=10)),
-            yaxis=dict(showgrid=True, gridcolor="#1f293d", tickfont=dict(color="#64748b", size=10), range=[0, 60]),
-            showlegend=False
-        )
-        st.plotly_chart(fig_err, use_container_width=True)
-
-    with chart_col2:
-        fig_lat = go.Figure()
-        fig_lat.add_trace(go.Scatter(
-            x=timestamps, y=latencies, mode="lines+markers",
-            line=dict(color="#f59e0b" if is_outage else "#38bdf8", width=2.4),
-            marker=dict(size=6), name="p99 Latency (ms)"
-        ))
-        fig_lat.update_layout(
-            title="End-to-End Payment Request Latency (p99 ms)",
-            title_font=dict(size=13, color="#cbd5e1"),
-            paper_bgcolor="#111827", plot_bgcolor="#111827",
-            height=250, margin=dict(l=45, r=25, t=40, b=30),
-            xaxis=dict(showgrid=True, gridcolor="#1f293d", tickfont=dict(color="#64748b", size=10)),
-            yaxis=dict(showgrid=True, gridcolor="#1f293d", tickfont=dict(color="#64748b", size=10), range=[0, 6000]),
-            showlegend=False
-        )
-        st.plotly_chart(fig_lat, use_container_width=True)
-
-    # 4. Outage Summary Banner (When Active or Diagnosed)
+    # 3. Outage Summary Banner (When Active or Diagnosed)
     if is_outage:
         inc = st.session_state.active_incident
         st.markdown(f"""
