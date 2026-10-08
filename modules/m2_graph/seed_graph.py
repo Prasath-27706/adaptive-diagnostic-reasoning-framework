@@ -140,7 +140,8 @@ def create_payment_seed_graph() -> DiagnosticGraph:
     dg.add_decision_edge("check:payment-api:p99_latency", "check:auth-svc:token_validation", priority_weight=0.8, condition="always")
     dg.add_decision_edge("check:payment-api:p99_latency", "check:ext-payment-gateway:status", priority_weight=0.7, condition="always")
     dg.add_decision_edge("check:payment-db:connection_pool", "check:payment-db:query_latency", priority_weight=1.0, condition="always")
-    dg.add_decision_edge("check:payment-db:connection_pool", "action:expand_db_connection_pool", priority_weight=1.0, condition="on_anomaly")
+    dg.add_decision_edge("check:payment-db:query_latency", "action:expand_db_connection_pool", priority_weight=1.0, condition="on_anomaly")
+    dg.add_decision_edge("check:payment-db:connection_pool", "action:expand_db_connection_pool", priority_weight=0.8, condition="on_anomaly")
     dg.add_decision_edge("check:auth-svc:token_validation", "action:restart_auth_service", priority_weight=1.0, condition="on_anomaly")
     dg.add_decision_edge("check:ext-payment-gateway:status", "action:circuit_breaker_payment_gateway", priority_weight=1.0, condition="on_anomaly")
 

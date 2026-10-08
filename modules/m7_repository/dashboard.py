@@ -971,67 +971,67 @@ with tab_live:
 
         node_specs = {
             "entry:payment-api:error_rate": {
-                "x": 24, "y": 230, "w": 180, "h": 60,
+                "x": 24, "y": 230, "w": 170, "h": 58,
                 "badge": "INGRESS ALERT", "icon_type": "alert", "svc": "PAYMENT-API", "metric": "High 5xx Error Rate"
             },
             "check:frontend:cpu_utilization": {
-                "x": 244, "y": 140, "w": 180, "h": 60,
+                "x": 224, "y": 140, "w": 170, "h": 58,
                 "badge": "PERIMETER CHECK", "icon_type": "web", "svc": "FRONTEND WEB", "metric": "CPU Saturation Check"
             },
             "check:network:packet_loss": {
-                "x": 244, "y": 320, "w": 180, "h": 60,
+                "x": 224, "y": 320, "w": 170, "h": 58,
                 "badge": "PERIMETER CHECK", "icon_type": "gateway", "svc": "CORE GATEWAY", "metric": "Network Packet Loss"
             },
             "check:payment-api:p99_latency": {
-                "x": 464, "y": 230, "w": 180, "h": 60,
+                "x": 424, "y": 230, "w": 170, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "api", "svc": "PAYMENT-API", "metric": "p99 Latency Anomaly"
             },
             "check:payment-api:jvm_heap_exhaustion": {
-                "x": 464, "y": 140, "w": 180, "h": 60,
+                "x": 424, "y": 140, "w": 170, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-API", "metric": "Container Heap Saturation"
             },
             "check:auth-svc:token_validation": {
-                "x": 684, "y": 60, "w": 180, "h": 60,
+                "x": 624, "y": 80, "w": 170, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "auth", "svc": "AUTH-SVC", "metric": "Token Validation Time"
             },
-            "check:auth-svc:jwt_jwks_cache": {
-                "x": 684, "y": 130, "w": 180, "h": 60,
-                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "AUTH-SVC", "metric": "JWKS Key Cache Eviction"
-            },
             "check:payment-db:connection_pool": {
-                "x": 684, "y": 210, "w": 180, "h": 60,
+                "x": 624, "y": 230, "w": 170, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "db", "svc": "PAYMENT-DB", "metric": "DB Connection Pool"
             },
+            "check:ext-payment-gateway:status": {
+                "x": 624, "y": 380, "w": 170, "h": 58,
+                "badge": "CORE PROBE", "icon_type": "ext", "svc": "EXT GATEWAY", "metric": "HTTP 504 Timeout Rate"
+            },
+            "check:auth-svc:jwt_jwks_cache": {
+                "x": 824, "y": 80, "w": 170, "h": 58,
+                "badge": "DEEP PROBE", "icon_type": "deep", "svc": "AUTH-SVC", "metric": "JWKS Key Cache Eviction"
+            },
             "check:payment-db:query_latency": {
-                "x": 684, "y": 280, "w": 180, "h": 60,
+                "x": 824, "y": 190, "w": 170, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Slow Query Latency"
             },
             "check:payment-db:lock_contention": {
-                "x": 684, "y": 350, "w": 180, "h": 60,
+                "x": 824, "y": 270, "w": 170, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Row Lock Contention"
             },
-            "check:ext-payment-gateway:status": {
-                "x": 684, "y": 420, "w": 180, "h": 60,
-                "badge": "CORE PROBE", "icon_type": "ext", "svc": "EXT GATEWAY", "metric": "HTTP 504 Timeout Rate"
-            },
             "check:ext-payment-gateway:tls_handshake": {
-                "x": 684, "y": 490, "w": 180, "h": 60,
+                "x": 824, "y": 380, "w": 170, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "EXT GATEWAY", "metric": "Acquirer TLS Handshake"
             },
             "action:restart_auth_service": {
-                "x": 924, "y": 70, "w": 200, "h": 60,
+                "x": 1034, "y": 80, "w": 190, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "AUTH-SVC", "metric": "Restart Auth Pods"
             },
             "action:restart_payment_api": {
-                "x": 924, "y": 155, "w": 200, "h": 60,
+                "x": 1034, "y": 150, "w": 190, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-API", "metric": "Restart Pods & Scale RAM"
             },
             "action:expand_db_connection_pool": {
-                "x": 924, "y": 280, "w": 200, "h": 60,
+                "x": 1034, "y": 230, "w": 190, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-DB", "metric": "Scale Connection Pool"
             },
             "action:circuit_breaker_payment_gateway": {
-                "x": 924, "y": 420, "w": 200, "h": 60,
+                "x": 1034, "y": 380, "w": 190, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "EXT GATEWAY", "metric": "Trip Gateway Circuit"
             }
         }
@@ -1055,19 +1055,31 @@ with tab_live:
                 u_info = node_specs[u]
                 v_info = node_specs[v]
                 x1 = u_info["x"] + u_info["w"]
-                y1 = u_info["y"] + u_info["h"] / 2
-                x2 = v_info["x"]
+                y_mid = u_info["y"] + u_info["h"] / 2
                 y2 = v_info["y"] + v_info["h"] / 2
+
+                # Vertical port separation for branching edges so they don't overlap
+                if y2 < y_mid - 8:
+                    y1 = y_mid - 10
+                elif y2 > y_mid + 8:
+                    y1 = y_mid + 10
+                else:
+                    y1 = y_mid
+
+                x2 = v_info["x"]
                 is_active = (u in traversed_node_ids and v in traversed_node_ids)
                 cls = "edge-active" if is_active else "edge-idle"
                 marker = "url(#arrowActive)" if is_active else "url(#arrowIdle)"
                 
                 if abs(y1 - y2) < 2 and x2 > x1:
                     d = f"M {x1} {y1} L {x2} {y2}"
-                else:
-                    dx = max(24, (x2 - x1) * 0.45)
+                elif x2 > x1:
+                    dx = max(28, (x2 - x1) * 0.45)
                     d = f"M {x1} {y1} C {x1 + dx} {y1}, {x2 - dx} {y2}, {x2} {y2}"
+                else:
+                    d = f"M {x1} {y1} C {x1 + 35} {y1}, {x2 - 35} {y2}, {x2} {y2}"
                 edge_svg_lines.append(f'<path d="{d}" class="{cls}" marker-end="{marker}"/>')
+
 
         # Generate Node Cards (diagram-design editorial styling)
         node_svg_cards = []
@@ -1174,7 +1186,7 @@ with tab_live:
         </style>
         </head>
         <body>
-        <svg viewBox="0 0 1150 560" width="100%" height="560">
+        <svg viewBox="0 0 1260 510" width="100%" height="510">
             <defs>
                 <pattern id="gridDots" width="20" height="20" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
@@ -1190,11 +1202,12 @@ with tab_live:
             <rect width="100%" height="100%" fill="url(#gridDots)" rx="8"/>
             
             <!-- Column Architecture Header Labels -->
-            <text x="24" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 1: INGRESS ALERT</text>
-            <text x="244" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 2: PERIMETER PROBES</text>
-            <text x="464" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 3: INGRESS ANOMALY PROBE</text>
-            <text x="684" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 4: MICROSERVICE DIAGNOSTICS</text>
-            <text x="924" y="28" font-size="9.5" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 5: REMEDIATION ACTIONS</text>
+            <text x="24" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 1: INGRESS ALERT</text>
+            <text x="224" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 2: PERIMETER PROBES</text>
+            <text x="424" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 3: TELEMETRY PROBES</text>
+            <text x="624" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 4: SERVICE PROBES</text>
+            <text x="824" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 5: DEEP PROBES</text>
+            <text x="1034" y="28" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">STAGE 6: ACTIONS</text>
 
             <!-- Edges Layer -->
             {''.join(edge_svg_lines)}
@@ -1205,7 +1218,7 @@ with tab_live:
         </body>
         </html>
         """
-        st.components.v1.html(svg_content, height=580, scrolling=False)
+        st.components.v1.html(svg_content, height=530, scrolling=False)
 
     else:
         # Build Mathematical DAG Coordinate View via Plotly
@@ -1217,10 +1230,10 @@ with tab_live:
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
-                    "check:payment-db:connection_pool": (6.6, 3.0),
-                    "check:payment-db:query_latency": (8.6, 3.8),
-                    "check:payment-db:lock_contention": (8.6, 3.0),
-                    "action:expand_db_connection_pool": (8.6, 2.2)
+                    "check:payment-db:connection_pool": (6.4, 3.0),
+                    "check:payment-db:query_latency": (8.2, 3.5),
+                    "check:payment-db:lock_contention": (8.2, 2.5),
+                    "action:expand_db_connection_pool": (10.0, 3.0)
                 }
             elif active_root_svc == "auth-svc":
                 sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:auth-svc:token_validation", "check:auth-svc:jwt_jwks_cache", "action:restart_auth_service"]
@@ -1229,9 +1242,9 @@ with tab_live:
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
-                    "check:auth-svc:token_validation": (6.6, 3.0),
-                    "check:auth-svc:jwt_jwks_cache": (8.6, 3.8),
-                    "action:restart_auth_service": (8.6, 2.2)
+                    "check:auth-svc:token_validation": (6.4, 3.0),
+                    "check:auth-svc:jwt_jwks_cache": (8.2, 3.0),
+                    "action:restart_auth_service": (10.0, 3.0)
                 }
             elif active_root_svc == "ext-payment-gateway":
                 sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:ext-payment-gateway:status", "check:ext-payment-gateway:tls_handshake", "action:circuit_breaker_payment_gateway"]
@@ -1240,9 +1253,9 @@ with tab_live:
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
-                    "check:ext-payment-gateway:status": (6.6, 3.0),
-                    "check:ext-payment-gateway:tls_handshake": (8.6, 3.8),
-                    "action:circuit_breaker_payment_gateway": (8.6, 2.2)
+                    "check:ext-payment-gateway:status": (6.4, 3.0),
+                    "check:ext-payment-gateway:tls_handshake": (8.2, 3.0),
+                    "action:circuit_breaker_payment_gateway": (10.0, 3.0)
                 }
             else:
                 sub_nodes = ["entry:payment-api:error_rate", "check:frontend:cpu_utilization", "check:network:packet_loss", "check:payment-api:p99_latency", "check:payment-api:jvm_heap_exhaustion", "action:restart_payment_api"]
@@ -1251,8 +1264,8 @@ with tab_live:
                     "check:frontend:cpu_utilization": (2.8, 3.8),
                     "check:network:packet_loss": (2.8, 2.2),
                     "check:payment-api:p99_latency": (4.6, 3.0),
-                    "check:payment-api:jvm_heap_exhaustion": (6.6, 3.8),
-                    "action:restart_payment_api": (8.6, 3.0)
+                    "check:payment-api:jvm_heap_exhaustion": (6.4, 3.5),
+                    "action:restart_payment_api": (10.0, 3.0)
                 }
             target_nodes = [n for n in sub_nodes if G.has_node(n)]
             target_coords = {n: node_coords[n] for n in target_nodes if n in node_coords}
@@ -1263,21 +1276,22 @@ with tab_live:
                 "entry:payment-api:error_rate": (1.0, 3.0),
                 "check:frontend:cpu_utilization": (2.8, 4.0),
                 "check:network:packet_loss": (2.8, 2.0),
-                "check:payment-api:p99_latency": (4.8, 3.0),
-                "check:payment-api:jvm_heap_exhaustion": (4.8, 4.2),
-                "check:auth-svc:token_validation": (6.8, 4.5),
-                "check:auth-svc:jwt_jwks_cache": (6.8, 3.8),
-                "check:payment-db:connection_pool": (6.8, 3.0),
-                "check:payment-db:lock_contention": (6.8, 2.3),
-                "check:ext-payment-gateway:status": (6.8, 1.5),
-                "check:ext-payment-gateway:tls_handshake": (6.8, 0.8),
-                "action:restart_auth_service": (8.8, 4.5),
-                "action:restart_payment_api": (8.8, 3.7),
-                "check:payment-db:query_latency": (8.8, 3.0),
-                "action:expand_db_connection_pool": (8.8, 2.3),
-                "action:circuit_breaker_payment_gateway": (8.8, 1.5)
+                "check:payment-api:p99_latency": (4.6, 3.0),
+                "check:payment-api:jvm_heap_exhaustion": (4.6, 4.2),
+                "check:auth-svc:token_validation": (6.4, 4.5),
+                "check:auth-svc:jwt_jwks_cache": (8.2, 4.5),
+                "check:payment-db:connection_pool": (6.4, 3.0),
+                "check:payment-db:query_latency": (8.2, 3.4),
+                "check:payment-db:lock_contention": (8.2, 2.6),
+                "check:ext-payment-gateway:status": (6.4, 1.5),
+                "check:ext-payment-gateway:tls_handshake": (8.2, 1.5),
+                "action:restart_auth_service": (10.0, 4.5),
+                "action:restart_payment_api": (10.0, 3.8),
+                "action:expand_db_connection_pool": (10.0, 3.0),
+                "action:circuit_breaker_payment_gateway": (10.0, 1.5)
             }
             graph_title = f"Full Diagnostic Reasoning DAG Topology ({active_dg.version_id} • {len(target_nodes)} Live Nodes)"
+
 
 
         fig_net = go.Figure()
