@@ -130,9 +130,10 @@ def create_payment_seed_graph() -> DiagnosticGraph:
     )
 
     # 5. Connect Edges (Default Static Traversal Order)
-    # Entry -> Redundant checklist sweeps (always) -> Payment API checks -> Conditional branch to DB / Auth / External
+    # Entry -> Perimeter checks (Parallel branches) -> Payment API checks -> Conditional branch to DB / Auth / External
     dg.add_decision_edge("entry:payment-api:error_rate", "check:frontend:cpu_utilization", priority_weight=1.0, condition="always")
-    dg.add_decision_edge("check:frontend:cpu_utilization", "check:network:packet_loss", priority_weight=1.0, condition="always")
+    dg.add_decision_edge("entry:payment-api:error_rate", "check:network:packet_loss", priority_weight=0.9, condition="always")
+    dg.add_decision_edge("check:frontend:cpu_utilization", "check:payment-api:p99_latency", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:network:packet_loss", "check:payment-api:p99_latency", priority_weight=1.0, condition="always")
     dg.add_decision_edge("check:payment-api:p99_latency", "action:restart_payment_api", priority_weight=0.9, condition="on_anomaly")
     dg.add_decision_edge("check:payment-api:p99_latency", "check:payment-db:connection_pool", priority_weight=1.0, condition="always")
