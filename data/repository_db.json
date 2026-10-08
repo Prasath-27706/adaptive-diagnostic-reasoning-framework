@@ -24042,6 +24042,11 @@
       "timestamp": "2026-10-08T04:50:26.628574+00:00",
       "version_id": "seed-v1.0.0-rem-cpu_utilization-rem-packet_loss-add-lock_contention",
       "mttr_s": 78
+    },
+    {
+      "timestamp": "2026-10-08T04:59:41.947311+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 109
     }
   ]
 }
