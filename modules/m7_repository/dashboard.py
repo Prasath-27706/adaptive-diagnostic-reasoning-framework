@@ -394,19 +394,22 @@ else:
 # =============================================================================
 # 1. ENTERPRISE TOP NAVIGATION BAR
 # =============================================================================
-status_badge_html = f"<span class='pill pill-green'>ONLINE</span> <span style='color:#34d399;'>{ping_ms:.1f}ms</span>" if is_online else "<span class='pill pill-red'>OFFLINE</span>"
+status_badge_html = f"<span class='pill pill-green'>LIVE CONNECTED</span> <span style='color:#34d399;'>{ping_ms:.1f}ms</span>" if is_online else "<span class='pill pill-red'>OFFLINE</span>"
 
 st.markdown(f"""
 <div class="cloud-top-nav">
     <div class="cloud-brand">
-        <span>☁️ Cloud Management Console</span>
-        <span class="cloud-badge-env">k8s-prod-us-east-1</span>
-        <span class="cloud-badge-env">ns: payment-production</span>
+        <span style="font-size: 18px;">⚡</span>
+        <span>AWS / EKS Autonomous Cloud Operations Console</span>
+        <span class="cloud-badge-env">Region: us-east-1 (N. Virginia)</span>
+        <span class="cloud-badge-env">EKS Cluster: k8s-payment-prod-01</span>
+        <span class="cloud-badge-env">Namespace: production</span>
+        <span class="cloud-badge-env">VPC: vpc-0a4b7f91</span>
     </div>
     <div class="cloud-meta">
-        <span>Control Plane: <b>{API_BASE_URL}</b> ({status_badge_html})</span>
-        <span>Graph Engine: <span class="pill pill-blue">{active_version}</span></span>
-        <span>Active DAG Nodes: <b>{node_count}</b></span>
+        <span>FastAPI Engine: <a href="http://localhost:8000/docs" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight:600;">:8000/docs ↗</a> ({status_badge_html})</span>
+        <span>OTel Collector: <span class="pill pill-blue">v0.92-grpc</span></span>
+        <span>Reasoning DAG: <span class="pill pill-blue">{active_version}</span> ({node_count} nodes)</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -517,9 +520,8 @@ def trigger_evolution_step():
 # =============================================================================
 # 2. CONSOLE TABS (Unified Simulation & Operational Views)
 # =============================================================================
-tab_live, tab_safety, tab_evolve, tab_audit = st.tabs([
+tab_live, tab_evolve, tab_audit = st.tabs([
     "📡 Live Cluster Simulation & Causal Reasoning",
-    "🛡️ Formal Safety Verification Gate",
     "📊 Self-Evolution & MTTR Benchmark",
     "📜 Control Plane Audit Log & API Inspector"
 ])
@@ -1388,258 +1390,7 @@ with tab_live:
 
 
 # =============================================================================
-# TAB 2: SAFETY VERIFICATION GATE (INTERACTIVE AUDIT ENGINE)
-# =============================================================================
-with tab_safety:
-    st.markdown("<div class='section-title'>🛡️ Module 6: Formal Safety Verification Gate (Pre-Deployment Validation)</div>", unsafe_allow_html=True)
-
-    safety_tab1, safety_tab2, safety_tab3 = st.tabs([
-        "🔍 Active Production Graph Audit",
-        "⚖️ Baseline vs Evolved Candidate Comparison",
-        "⚠️ Adversarial Loop Injection Stress Test"
-    ])
-
-    with safety_tab1:
-        if not st.session_state.get("safety_audit_executed", False):
-            st.markdown(f"""
-            <div class="enterprise-card" style="border-left: 4px solid #38bdf8; margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="card-heading">🛡️ Pre-Deployment Invariant Verification Gate</div>
-                    <span class="pill pill-blue">GATE STATUS: STANDBY / ARMED</span>
-                </div>
-                <div style="font-size: 13px; color: #cbd5e1; margin-top: 10px; line-height: 1.6;">
-                    The Safety Verification Gate (Module 6) operates as a strict autonomous gatekeeper. Before deploying any reasoning graph candidate to production, it mathematically enforces two non-negotiable invariants:
-                </div>
-                <div style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    <div style="background: #0b0f19; border: 1px solid #1f293d; border-radius: 6px; padding: 12px 14px;">
-                        <div style="color: #38bdf8; font-weight: 600; font-size: 12px;">1. Kahn's DAG Acyclicity & Reachability</div>
-                        <div style="color: #94a3b8; font-size: 11.5px; margin-top: 4px; line-height: 1.5;">
-                            Validates zero circular reasoning loops via in-degree vertex elimination. Confirms 100% path reachability from root alerts to remediation actions with zero orphan nodes.
-                        </div>
-                    </div>
-                    <div style="background: #0b0f19; border: 1px solid #1f293d; border-radius: 6px; padding: 12px 14px;">
-                        <div style="color: #34d399; font-weight: 600; font-size: 12px;">2. Historical Benchmark Replay Non-Regression</div>
-                        <div style="color: #94a3b8; font-size: 11.5px; margin-top: 4px; line-height: 1.5;">
-                            Replays candidate reasoning graph across all 4 enterprise failure scenarios to guarantee worst-case regression bound &le; 10.00%.
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8;">
-                    Target Candidate: <b style="color: #f1f5f9;">{active_version}</b> | Active Nodes: <b style="color: #f1f5f9;">{node_count}</b> | Status: <span style="color: #38bdf8;">Awaiting Audit Trigger</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            btn_col1, btn_col2 = st.columns([1.6, 2.4])
-            with btn_col1:
-                if st.button("🛡️ Execute Pre-Deployment Formal Audit", use_container_width=True):
-                    # Fetch latest graph to verify
-                    st_code, g_dict, _, _ = call_backend("/graph/latest")
-                    target_g = DiagnosticGraph.from_dict(g_dict) if (st_code == 200 and "nodes" in g_dict) else create_payment_seed_graph()
-
-                    test_incidents = [
-                        {"incident_id": "REG-01", "root_cause": {"service": "payment-db", "metric": "connection_pool_usage", "fault_type": "connection_pool_exhausted"}, "symptoms": [{"service": "payment-api", "metric": "error_rate", "value": 0.442}, {"service": "payment-db", "metric": "connection_pool_usage", "value": 0.98}]},
-                        {"incident_id": "REG-02", "root_cause": {"service": "auth-svc", "metric": "token_validation_latency", "fault_type": "auth_token_timeout"}, "symptoms": [{"service": "payment-api", "metric": "error_rate", "value": 0.385}, {"service": "auth-svc", "metric": "token_validation_latency", "value": 4800.0}]}
-                    ]
-                    v_code, v_resp, v_ms, _ = call_backend("/verify", "POST", {
-                        "candidate_graph": target_g.to_dict(),
-                        "historical_incidents": test_incidents
-                    })
-                    if v_code == 200:
-                        st.session_state.verification_report = v_resp
-                    else:
-                        verifier = GraphVerifier()
-                        st.session_state.verification_report = verifier.verify_candidate_graph(target_g, target_g, test_incidents)
-
-                    st.session_state.safety_audit_executed = True
-                    log_event(f"Safety Gate Audit complete for {target_g.version_id}: Kahn's DAG Check PASS, Non-Regression PASS. Status: APPROVED.")
-                    st.rerun()
-            with btn_col2:
-                st.markdown("<div style='font-size: 12px; color: #64748b; padding-top: 8px;'>💡 Click to trigger topological cycle analysis and historical replay verification against the live cluster control plane.</div>", unsafe_allow_html=True)
-
-        else:
-            # Interactive Action Bar
-            act_col1, act_col2, act_col3 = st.columns([2.6, 1.2, 1.0])
-            with act_col1:
-                st.markdown(f"Audit Verified Graph: <span class='pill pill-green'>{active_version}</span> (<b style='color:#f8fafc;'>{node_count} Active Nodes</b>) — Formal Invariants Enforced.", unsafe_allow_html=True)
-            with act_col2:
-                if st.button("🛡️ Re-Run Formal Safety Audit", use_container_width=True):
-                    # Fetch latest graph to verify
-                    st_code, g_dict, _, _ = call_backend("/graph/latest")
-                    target_g = DiagnosticGraph.from_dict(g_dict) if (st_code == 200 and "nodes" in g_dict) else create_payment_seed_graph()
-
-                    test_incidents = [
-                        {"incident_id": "REG-01", "root_cause": {"service": "payment-db", "metric": "connection_pool_usage", "fault_type": "connection_pool_exhausted"}, "symptoms": [{"service": "payment-api", "metric": "error_rate", "value": 0.442}, {"service": "payment-db", "metric": "connection_pool_usage", "value": 0.98}]},
-                        {"incident_id": "REG-02", "root_cause": {"service": "auth-svc", "metric": "token_validation_latency", "fault_type": "auth_token_timeout"}, "symptoms": [{"service": "payment-api", "metric": "error_rate", "value": 0.385}, {"service": "auth-svc", "metric": "token_validation_latency", "value": 4800.0}]}
-                    ]
-                    v_code, v_resp, v_ms, _ = call_backend("/verify", "POST", {
-                        "candidate_graph": target_g.to_dict(),
-                        "historical_incidents": test_incidents
-                    })
-                    if v_code == 200:
-                        st.session_state.verification_report = v_resp
-                    else:
-                        verifier = GraphVerifier()
-                        st.session_state.verification_report = verifier.verify_candidate_graph(target_g, target_g, test_incidents)
-
-                    st.session_state.safety_audit_executed = True
-                    log_event(f"Safety Gate Audit complete for {target_g.version_id}: Kahn's DAG Check PASS, Non-Regression PASS. Status: APPROVED.")
-                    st.rerun()
-            with act_col3:
-                if st.button("↺ Reset to Standby", use_container_width=True):
-                    st.session_state.safety_audit_executed = False
-                    st.rerun()
-
-            # Dynamic Verification Metrics
-            vcol1, vcol2 = st.columns(2)
-            with vcol1:
-                # Real Kahn's Algorithm Topological Sort Details
-                try:
-                    top_order = list(nx.topological_sort(G))
-                    top_display = " → ".join([n.split(":")[-1] for n in top_order[:5]]) + (" → ..." if len(top_order) > 5 else "")
-                except Exception:
-                    top_display = "Strict DAG (Topological sort valid)"
-
-                # Real in-degree 0 entry nodes
-                in_zero = [n for n in G.nodes() if G.in_degree(n) == 0]
-                terminal_nodes = [n for n in G.nodes() if G.out_degree(n) == 0]
-
-                st.markdown(f"""
-                <div class="enterprise-card" style="border-left: 4px solid #10b981;">
-                    <div class="card-heading">1. Kahn's DAG Acyclicity Test & Reachability Invariants</div>
-                    <div style="font-size: 12.5px; color: #cbd5e1; margin-top: 8px;">
-                        Validates structural graph invariants using in-degree vertex elimination. Eliminates circular reasoning loops before production deployment.
-                    </div>
-                    <div style="margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8;">
-                        <div>Cycles Detected: <span style="color: #34d399; font-weight: 700;">0 (Strict Directed Acyclic Graph)</span></div>
-                        <div>Root Entry Vertices: <span style="color: #38bdf8;">{len(in_zero)} ({', '.join(in_zero)})</span></div>
-                        <div>Topological Order: <span style="color: #94a3b8;">{top_display}</span></div>
-                        <div>Orphan Node Sweep: <span style="color: #34d399; font-weight: 700;">0 Disconnected Nodes (100% Reachable)</span></div>
-                        <div>Terminal Action Vertices: <span style="color: #a78bfa;">{len(terminal_nodes)} Terminal Nodes Preserved</span></div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-            with vcol2:
-                current_mttr = st.session_state.evolution_history[-1]["mttr_s"]
-                st.markdown(f"""
-                <div class="enterprise-card" style="border-left: 4px solid #10b981;">
-                    <div class="card-heading">2. Historical Benchmark Replay Non-Regression Bounds</div>
-                    <div style="font-size: 12.5px; color: #cbd5e1; margin-top: 8px;">
-                        Replays candidate reasoning graph across historical incident vectors to mathematically ensure zero diagnostic regression.
-                    </div>
-                    <div style="margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8;">
-                        <div>Benchmark Test Vectors: <span style="color: #f1f5f9; font-weight: 700;">4 Enterprise Incident Scenarios</span></div>
-                        <div>Safety Bound Threshold: <span style="color: #f1f5f9;">Max Allowed Regression &le; 10.00%</span></div>
-                        <div>Empirical Worst-Case Regression: <span style="color: #34d399; font-weight: 700;">0.00% (Zero Regression - PASS)</span></div>
-                        <div>Replay Evaluation Latency: <span style="color: #38bdf8;">1.28 ms (Sub-millisecond verification)</span></div>
-                        <div>Remediation Action Integrity: <span style="color: #34d399; font-weight: 700;">100% Preserved</span></div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-            # Dynamic Replay Table Across 4 Scenarios
-            st.markdown("<div style='margin-top: 16px; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #cbd5e1;'>Historical Benchmark Replay Matrix (4 Scenarios)</div>", unsafe_allow_html=True)
-            cur_mttr = st.session_state.evolution_history[-1]["mttr_s"]
-            replay_df = pd.DataFrame([
-                {"Vector ID": "SCN-01", "Outage Class": "Payment DB Connection Pool Exhaustion", "Target Service": "payment-db", "Root Cause Reachable": "✅ 100% Verified", "Baseline MTTR": "89.0s", f"Candidate ({active_version})": f"{cur_mttr}s", "Delta": f"-{round((89.0 - cur_mttr)/89.0 * 100, 1)}%", "Gate Verdict": "APPROVED"},
-                {"Vector ID": "SCN-02", "Outage Class": "Auth Token Timeout Saturation", "Target Service": "auth-svc", "Root Cause Reachable": "✅ 100% Verified", "Baseline MTTR": "94.0s", f"Candidate ({active_version})": f"{round(cur_mttr * 1.05, 1)}s", "Delta": f"-{round((89.0 - cur_mttr)/89.0 * 100, 1)}%", "Gate Verdict": "APPROVED"},
-                {"Vector ID": "SCN-03", "Outage Class": "Redis Cache Stampede / Thundering Herd", "Target Service": "redis-cache", "Root Cause Reachable": "✅ 100% Verified", "Baseline MTTR": "91.0s", f"Candidate ({active_version})": f"{round(cur_mttr * 1.02, 1)}s", "Delta": f"-{round((89.0 - cur_mttr)/89.0 * 100, 1)}%", "Gate Verdict": "APPROVED"},
-                {"Vector ID": "SCN-04", "Outage Class": "Queue Worker Memory Saturation OOM", "Target Service": "queue-worker", "Root Cause Reachable": "✅ 100% Verified", "Baseline MTTR": "88.0s", f"Candidate ({active_version})": f"{round(cur_mttr * 0.99, 1)}s", "Delta": f"-{round((89.0 - cur_mttr)/89.0 * 100, 1)}%", "Gate Verdict": "APPROVED"}
-            ])
-            st.dataframe(replay_df, use_container_width=True, hide_index=True)
-
-            # Formal Cryptographic Approval Banner
-            import hashlib
-            graph_hash = hashlib.sha256(json.dumps(list(G.edges())).encode()).hexdigest()[:24]
-            st.markdown(f"""
-            <div style="background-color: #0f1d19; border: 1px solid #064e3b; border-left: 5px solid #10b981; border-radius: 6px; padding: 14px 18px; margin-top: 14px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: #34d399; font-size: 13.5px;">✅ FORMALLY APPROVED FOR AUTONOMOUS CLUSTER DEPLOYMENT</span>
-                    <span class="pill pill-green">STATUS: APPROVED</span>
-                </div>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #94a3b8; margin-top: 6px;">
-                    Target: <b>{active_version}</b> | Cryptographic Digest: <b>SHA256:{graph_hash}...</b> | Verified Invariant: Strict DAG (0 Cycles, Zero Non-Regression)
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    with safety_tab2:
-        st.markdown("<div style='font-size: 13px; color: #94a3b8; margin-bottom: 12px;'>Multi-objective comparison proving candidate graph superiority over bootstrap baseline without violating safety bounds.</div>", unsafe_allow_html=True)
-        cur_mttr = st.session_state.evolution_history[-1]["mttr_s"]
-        comp_df = pd.DataFrame([
-            {"Structural / Operational Dimension": "Total Reasoning Nodes", "Baseline Seed (v1.0.0)": "11 Nodes", f"Active Candidate ({active_version})": f"{node_count} Nodes", "Optimization Impact": f"{11 - node_count} redundant checks eliminated"},
-            {"Structural / Operational Dimension": "Directed Decision Edges", "Baseline Seed (v1.0.0)": "10 Edges", f"Active Candidate ({active_version})": f"{len(G.edges())} Edges", "Optimization Impact": "Pruned uninformative traversal hops"},
-            {"Structural / Operational Dimension": "Mean Time to Resolution (MTTR)", "Baseline Seed (v1.0.0)": "89.0s", f"Active Candidate ({active_version})": f"{cur_mttr}s", "Optimization Impact": f"-{round((89.0 - cur_mttr)/89.0 * 100, 1)}% Diagnostic Latency Reduction"},
-            {"Structural / Operational Dimension": "Acyclic DAG Invariant (Kahn's)", "Baseline Seed (v1.0.0)": "Strict DAG (0 cycles)", f"Active Candidate ({active_version})": "Strict DAG (0 cycles)", "Optimization Impact": "Verified Zero Infinite Loops"},
-            {"Structural / Operational Dimension": "Root Reachability Sweep", "Baseline Seed (v1.0.0)": "100% Reachable (0 orphans)", f"Active Candidate ({active_version})": "100% Reachable (0 orphans)", "Optimization Impact": "Zero Orphan Disconnected Nodes"},
-            {"Structural / Operational Dimension": "Action Remediation Preservation", "Baseline Seed (v1.0.0)": "100% Preserved", f"Active Candidate ({active_version})": "100% Preserved", "Optimization Impact": "Remediation actions fully intact"}
-        ])
-        st.dataframe(comp_df, use_container_width=True, hide_index=True)
-
-        st.markdown(f"""
-        <div class="enterprise-card" style="margin-top: 14px; border-left: 4px solid #38bdf8;">
-            <div class="card-heading">Formal Non-Regression Proof & Multi-Objective Pareto Guarantee</div>
-            <div style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.6;">
-                The candidate reasoning graph was generated using multi-objective optimization: <code>F(G) = &alpha;&middot;MTTR_reduction + &beta;&middot;Entropy_gain - &gamma;&middot;Complexity_penalty</code>.
-                Candidate <b>{active_version}</b> achieved an MTTR reduction of <b>{round((89.0 - cur_mttr)/89.0 * 100, 1)}%</b> while preserving all remediation paths. Historical replay confirmed maximum empirical regression across all benchmark scenarios is strictly <b>0.00% &le; 10.00%</b> safety threshold.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with safety_tab3:
-        st.markdown("<div style='font-size: 13px; color: #94a3b8; margin-bottom: 12px;'>Demonstrates that Module 6 actively blocks unsafe mutations. Injects a synthetic circular dependency to test whether the safety gate intercepts the invalid graph.</div>", unsafe_allow_html=True)
-
-        adv_col1, adv_col2 = st.columns([2, 1])
-        with adv_col1:
-            st.markdown("""
-            <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.6;">
-                In autonomous self-evolution, an unconstrained mutation could accidentally introduce a cyclic edge, e.g.:<br/>
-                <code>check:payment-db:connection_pool ➔ check:payment-api:p99_latency</code><br/>
-                This creates an infinite reasoning loop during automated outage diagnosis.
-            </div>
-            """, unsafe_allow_html=True)
-        with adv_col2:
-            if not st.session_state.adversarial_test_active:
-                if st.button("⚡ Inject Adversarial Cycle", use_container_width=True):
-                    st.session_state.adversarial_test_active = True
-                    log_event("⚠️ Adversarial cycle injected: check:payment-db:connection_pool -> check:payment-api:p99_latency")
-                    st.rerun()
-            else:
-                if st.button("↺ Restore Safe Baseline Invariant", use_container_width=True):
-                    st.session_state.adversarial_test_active = False
-                    log_event("Restored safe DAG invariant. Adversarial cycle cleared.")
-                    st.rerun()
-
-        if st.session_state.adversarial_test_active:
-            # Simulate adversarial cycle detection live
-            st.markdown(f"""
-            <div style="background-color: #2a1215; border: 1px solid #7f1d1d; border-left: 5px solid #ef4444; border-radius: 6px; padding: 16px 20px; margin-top: 14px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: #f87171; font-size: 14px;">🚨 FORMAL SAFETY GATE INVARIANT VIOLATION: CANDIDATE DEPLOYMENT REJECTED</span>
-                    <span class="pill pill-red">STATUS: REJECTED</span>
-                </div>
-                <div style="font-size: 12.5px; color: #fca5a5; margin-top: 10px;">
-                    <b>Kahn's Topological Elimination Algorithm Failure:</b> Candidate graph contains a circular reasoning dependency. Traversal would loop infinitely during autonomous incident remediation.
-                </div>
-                <div style="margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fecaca; background: #1a0a0c; padding: 12px; border-radius: 4px; line-height: 1.8;">
-                    <div>Injected Back-Edge: <b style="color: #f87171;">check:payment-db:connection_pool ➔ check:payment-api:p99_latency</b></div>
-                    <div>Cycle Path Detected: <b style="color: #f87171;">['check:payment-api:p99_latency', 'check:payment-db:connection_pool', 'check:payment-api:p99_latency']</b></div>
-                    <div>Kahn's Unresolved Vertices: <span style="color: #fbbf24;">2 nodes cannot reach in-degree 0</span></div>
-                    <div>Enforcement Action: <b style="color: #34d399;">Deployment BLOCKED. Candidate discarded. Production cluster kept safe on {active_version}.</b></div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div style="background-color: #111827; border: 1px dashed #374151; border-radius: 6px; padding: 14px 18px; margin-top: 14px; color: #94a3b8; font-size: 12px;">
-                💡 <i>Click "Inject Adversarial Cycle" above to test formal safety gate enforcement. You will observe Kahn's cycle detection intercept the faulty graph and abort deployment in real-time.</i>
-            </div>
-            """, unsafe_allow_html=True)
-
-
-# =============================================================================
-# TAB 3: SELF-EVOLUTION & MTTR BENCHMARK (LIVE CLOSED-LOOP ENGINE)
+# TAB 2: SELF-EVOLUTION & MTTR BENCHMARK (LIVE CLOSED-LOOP ENGINE)
 # =============================================================================
 with tab_evolve:
     st.markdown("<div class='section-title'>⚡ Closed-Loop Self-Evolution & Quantitative MTTR Reduction (Modules 4 & 5)</div>", unsafe_allow_html=True)

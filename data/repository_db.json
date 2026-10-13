@@ -2,7 +2,7 @@
   "graphs": {
     "seed-v1.0.0": {
       "version_id": "seed-v1.0.0",
-      "created_at": "2026-10-08T04:50:25.735349+00:00",
+      "created_at": "2026-10-13T02:47:59.055601+00:00",
       "graph": {
         "version_id": "seed-v1.0.0",
         "node_count": 12,
@@ -3738,11 +3738,11 @@
     },
     "seed-v1.0.0-rem-packet_loss": {
       "version_id": "seed-v1.0.0-rem-packet_loss",
-      "created_at": "2026-10-08T03:05:54.510258+00:00",
+      "created_at": "2026-10-12T12:46:25.339500+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-packet_loss",
         "node_count": 11,
-        "edge_count": 11,
+        "edge_count": 12,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -3907,6 +3907,12 @@
           {
             "source": "check:payment-db:connection_pool",
             "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
             "weight": 1.0,
             "condition": "on_anomaly"
           },
@@ -3925,15 +3931,15 @@
         ]
       },
       "node_count": 11,
-      "edge_count": 11
+      "edge_count": 12
     },
     "v1.0.1": {
       "version_id": "v1.0.1",
-      "created_at": "2026-10-08T03:08:26.748997+00:00",
+      "created_at": "2026-10-13T02:44:14.711324+00:00",
       "graph": {
         "version_id": "v1.0.1",
         "node_count": 11,
-        "edge_count": 11,
+        "edge_count": 12,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -4098,6 +4104,378 @@
           {
             "source": "check:payment-db:connection_pool",
             "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:ext-payment-gateway:status",
+            "target": "action:circuit_breaker_payment_gateway",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 11,
+      "edge_count": 12
+    },
+    "v1.0.2": {
+      "version_id": "v1.0.2",
+      "created_at": "2026-10-13T02:44:16.174528+00:00",
+      "graph": {
+        "version_id": "v1.0.2",
+        "node_count": 10,
+        "edge_count": 10,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:expand_db_connection_pool",
+            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
+            "node_type": "action",
+            "target_service": "payment-db",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 10,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_payment_api",
+            "label": "Remediation: Restart Payment API Pods & Scale Heap",
+            "node_type": "action",
+            "target_service": "payment-api",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 12,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:circuit_breaker_payment_gateway",
+            "label": "Remediation: Trip Gateway Circuit Breaker & Reroute",
+            "node_type": "action",
+            "target_service": "ext-payment-gateway",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 8,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "action:restart_payment_api",
+            "weight": 0.9,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:auth-svc:token_validation",
+            "target": "action:restart_auth_service",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:ext-payment-gateway:status",
+            "target": "action:circuit_breaker_payment_gateway",
+            "weight": 1.0,
+            "condition": "on_anomaly"
+          }
+        ]
+      },
+      "node_count": 10,
+      "edge_count": 10
+    },
+    "v1.0.3": {
+      "version_id": "v1.0.3",
+      "created_at": "2026-10-13T02:44:17.590624+00:00",
+      "graph": {
+        "version_id": "v1.0.3",
+        "node_count": 11,
+        "edge_count": 11,
+        "nodes": [
+          {
+            "id": "entry:payment-api:error_rate",
+            "label": "Check Payment API High 5xx Error Rate",
+            "node_type": "entry",
+            "target_service": "payment-api",
+            "target_metric": "error_rate",
+            "info_gain": 0.0,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:p99_latency",
+            "label": "Check Payment API p99 Latency Anomaly",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "p99_latency",
+            "info_gain": 0.45,
+            "avg_duration_s": 2,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:connection_pool",
+            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "connection_pool_usage",
+            "info_gain": 0.88,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.85
+          },
+          {
+            "id": "check:payment-db:query_latency",
+            "label": "Check Payment DB Slow Query Latency",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "query_latency_ms",
+            "info_gain": 0.72,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:auth-svc:token_validation",
+            "label": "Check Auth Service Token Validation Latency",
+            "node_type": "check",
+            "target_service": "auth-svc",
+            "target_metric": "token_validation_latency",
+            "info_gain": 0.65,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:ext-payment-gateway:status",
+            "label": "Check External Payment Gateway Timeout Rate",
+            "node_type": "check",
+            "target_service": "ext-payment-gateway",
+            "target_metric": "timeout_rate",
+            "info_gain": 0.8,
+            "avg_duration_s": 4,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:expand_db_connection_pool",
+            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
+            "node_type": "action",
+            "target_service": "payment-db",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 10,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_auth_service",
+            "label": "Remediation: Restart Authentication Service Pods",
+            "node_type": "action",
+            "target_service": "auth-svc",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 15,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:restart_payment_api",
+            "label": "Remediation: Restart Payment API Pods & Scale Heap",
+            "node_type": "action",
+            "target_service": "payment-api",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 12,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "action:circuit_breaker_payment_gateway",
+            "label": "Remediation: Trip Gateway Circuit Breaker & Reroute",
+            "node_type": "action",
+            "target_service": "ext-payment-gateway",
+            "target_metric": null,
+            "info_gain": 0.0,
+            "avg_duration_s": 8,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:lock_contention",
+            "label": "Check PostgreSQL Row Lock Contention",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "lock_contention",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          }
+        ],
+        "edges": [
+          {
+            "source": "entry:payment-api:error_rate",
+            "target": "check:payment-api:p99_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "action:restart_payment_api",
+            "weight": 0.9,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-db:connection_pool",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:auth-svc:token_validation",
+            "weight": 0.8,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:ext-payment-gateway:status",
+            "weight": 0.7,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:query_latency",
+            "weight": 1.0,
+            "condition": "always"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:lock_contention",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
             "weight": 1.0,
             "condition": "on_anomaly"
           },
@@ -4118,351 +4496,13 @@
       "node_count": 11,
       "edge_count": 11
     },
-    "v1.0.2": {
-      "version_id": "v1.0.2",
-      "created_at": "2026-10-08T03:08:32.187216+00:00",
-      "graph": {
-        "version_id": "v1.0.2",
-        "node_count": 10,
-        "edge_count": 9,
-        "nodes": [
-          {
-            "id": "entry:payment-api:error_rate",
-            "label": "Check Payment API High 5xx Error Rate",
-            "node_type": "entry",
-            "target_service": "payment-api",
-            "target_metric": "error_rate",
-            "info_gain": 0.0,
-            "avg_duration_s": 2,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:payment-api:p99_latency",
-            "label": "Check Payment API p99 Latency Anomaly",
-            "node_type": "check",
-            "target_service": "payment-api",
-            "target_metric": "p99_latency",
-            "info_gain": 0.45,
-            "avg_duration_s": 2,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:payment-db:connection_pool",
-            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
-            "node_type": "check",
-            "target_service": "payment-db",
-            "target_metric": "connection_pool_usage",
-            "info_gain": 0.88,
-            "avg_duration_s": 3,
-            "historical_success_rate": 0.85
-          },
-          {
-            "id": "check:payment-db:query_latency",
-            "label": "Check Payment DB Slow Query Latency",
-            "node_type": "check",
-            "target_service": "payment-db",
-            "target_metric": "query_latency_ms",
-            "info_gain": 0.72,
-            "avg_duration_s": 3,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:auth-svc:token_validation",
-            "label": "Check Auth Service Token Validation Latency",
-            "node_type": "check",
-            "target_service": "auth-svc",
-            "target_metric": "token_validation_latency",
-            "info_gain": 0.65,
-            "avg_duration_s": 4,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:ext-payment-gateway:status",
-            "label": "Check External Payment Gateway Timeout Rate",
-            "node_type": "check",
-            "target_service": "ext-payment-gateway",
-            "target_metric": "timeout_rate",
-            "info_gain": 0.8,
-            "avg_duration_s": 4,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:expand_db_connection_pool",
-            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
-            "node_type": "action",
-            "target_service": "payment-db",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 10,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:restart_auth_service",
-            "label": "Remediation: Restart Authentication Service Pods",
-            "node_type": "action",
-            "target_service": "auth-svc",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 15,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:restart_payment_api",
-            "label": "Remediation: Restart Payment API Pods & Scale Heap",
-            "node_type": "action",
-            "target_service": "payment-api",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 12,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:circuit_breaker_payment_gateway",
-            "label": "Remediation: Trip Gateway Circuit Breaker & Reroute",
-            "node_type": "action",
-            "target_service": "ext-payment-gateway",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 8,
-            "historical_success_rate": 0.5
-          }
-        ],
-        "edges": [
-          {
-            "source": "entry:payment-api:error_rate",
-            "target": "check:payment-api:p99_latency",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "action:restart_payment_api",
-            "weight": 0.9,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:payment-db:connection_pool",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:auth-svc:token_validation",
-            "weight": 0.8,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:ext-payment-gateway:status",
-            "weight": 0.7,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-db:connection_pool",
-            "target": "check:payment-db:query_latency",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-db:connection_pool",
-            "target": "action:expand_db_connection_pool",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:auth-svc:token_validation",
-            "target": "action:restart_auth_service",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:ext-payment-gateway:status",
-            "target": "action:circuit_breaker_payment_gateway",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          }
-        ]
-      },
-      "node_count": 10,
-      "edge_count": 9
-    },
-    "v1.0.3": {
-      "version_id": "v1.0.3",
-      "created_at": "2026-10-08T03:08:33.254694+00:00",
-      "graph": {
-        "version_id": "v1.0.3",
-        "node_count": 10,
-        "edge_count": 9,
-        "nodes": [
-          {
-            "id": "entry:payment-api:error_rate",
-            "label": "Check Payment API High 5xx Error Rate",
-            "node_type": "entry",
-            "target_service": "payment-api",
-            "target_metric": "error_rate",
-            "info_gain": 0.0,
-            "avg_duration_s": 2,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:payment-api:p99_latency",
-            "label": "Check Payment API p99 Latency Anomaly",
-            "node_type": "check",
-            "target_service": "payment-api",
-            "target_metric": "p99_latency",
-            "info_gain": 0.45,
-            "avg_duration_s": 2,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:payment-db:connection_pool",
-            "label": "Check Payment PostgreSQL Connection Pool Exhaustion",
-            "node_type": "check",
-            "target_service": "payment-db",
-            "target_metric": "connection_pool_usage",
-            "info_gain": 0.88,
-            "avg_duration_s": 3,
-            "historical_success_rate": 0.85
-          },
-          {
-            "id": "check:payment-db:query_latency",
-            "label": "Check Payment DB Slow Query Latency",
-            "node_type": "check",
-            "target_service": "payment-db",
-            "target_metric": "query_latency_ms",
-            "info_gain": 0.72,
-            "avg_duration_s": 3,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:auth-svc:token_validation",
-            "label": "Check Auth Service Token Validation Latency",
-            "node_type": "check",
-            "target_service": "auth-svc",
-            "target_metric": "token_validation_latency",
-            "info_gain": 0.65,
-            "avg_duration_s": 4,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "check:ext-payment-gateway:status",
-            "label": "Check External Payment Gateway Timeout Rate",
-            "node_type": "check",
-            "target_service": "ext-payment-gateway",
-            "target_metric": "timeout_rate",
-            "info_gain": 0.8,
-            "avg_duration_s": 4,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:expand_db_connection_pool",
-            "label": "Remediation: Scale Up Payment DB Connection Pool Size",
-            "node_type": "action",
-            "target_service": "payment-db",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 10,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:restart_auth_service",
-            "label": "Remediation: Restart Authentication Service Pods",
-            "node_type": "action",
-            "target_service": "auth-svc",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 15,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:restart_payment_api",
-            "label": "Remediation: Restart Payment API Pods & Scale Heap",
-            "node_type": "action",
-            "target_service": "payment-api",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 12,
-            "historical_success_rate": 0.5
-          },
-          {
-            "id": "action:circuit_breaker_payment_gateway",
-            "label": "Remediation: Trip Gateway Circuit Breaker & Reroute",
-            "node_type": "action",
-            "target_service": "ext-payment-gateway",
-            "target_metric": null,
-            "info_gain": 0.0,
-            "avg_duration_s": 8,
-            "historical_success_rate": 0.5
-          }
-        ],
-        "edges": [
-          {
-            "source": "entry:payment-api:error_rate",
-            "target": "check:payment-api:p99_latency",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "action:restart_payment_api",
-            "weight": 0.9,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:payment-db:connection_pool",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:auth-svc:token_validation",
-            "weight": 0.8,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-api:p99_latency",
-            "target": "check:ext-payment-gateway:status",
-            "weight": 0.7,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-db:connection_pool",
-            "target": "check:payment-db:query_latency",
-            "weight": 1.0,
-            "condition": "always"
-          },
-          {
-            "source": "check:payment-db:connection_pool",
-            "target": "action:expand_db_connection_pool",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:auth-svc:token_validation",
-            "target": "action:restart_auth_service",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          },
-          {
-            "source": "check:ext-payment-gateway:status",
-            "target": "action:circuit_breaker_payment_gateway",
-            "weight": 1.0,
-            "condition": "on_anomaly"
-          }
-        ]
-      },
-      "node_count": 10,
-      "edge_count": 9
-    },
     "v1.0.4": {
       "version_id": "v1.0.4",
-      "created_at": "2026-10-08T03:08:34.178607+00:00",
+      "created_at": "2026-10-13T02:44:19.148867+00:00",
       "graph": {
         "version_id": "v1.0.4",
-        "node_count": 10,
-        "edge_count": 9,
+        "node_count": 12,
+        "edge_count": 12,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -4563,6 +4603,26 @@
             "info_gain": 0.0,
             "avg_duration_s": 8,
             "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:lock_contention",
+            "label": "Check PostgreSQL Row Lock Contention",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "lock_contention",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:jvm_heap_exhaustion",
+            "label": "Check Container Cgroup & JVM Heap Saturation",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "jvm_heap_exhaustion",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
           }
         ],
         "edges": [
@@ -4597,6 +4657,12 @@
             "condition": "always"
           },
           {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-api:jvm_heap_exhaustion",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:query_latency",
             "weight": 1.0,
@@ -4604,6 +4670,18 @@
           },
           {
             "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:lock_contention",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
             "target": "action:expand_db_connection_pool",
             "weight": 1.0,
             "condition": "on_anomaly"
@@ -4622,16 +4700,16 @@
           }
         ]
       },
-      "node_count": 10,
-      "edge_count": 9
+      "node_count": 12,
+      "edge_count": 12
     },
     "v1.0.5": {
       "version_id": "v1.0.5",
-      "created_at": "2026-10-08T03:08:34.458266+00:00",
+      "created_at": "2026-10-13T02:44:20.362500+00:00",
       "graph": {
         "version_id": "v1.0.5",
-        "node_count": 10,
-        "edge_count": 9,
+        "node_count": 12,
+        "edge_count": 12,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -4732,6 +4810,26 @@
             "info_gain": 0.0,
             "avg_duration_s": 8,
             "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:lock_contention",
+            "label": "Check PostgreSQL Row Lock Contention",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "lock_contention",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:jvm_heap_exhaustion",
+            "label": "Check Container Cgroup & JVM Heap Saturation",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "jvm_heap_exhaustion",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
           }
         ],
         "edges": [
@@ -4766,6 +4864,12 @@
             "condition": "always"
           },
           {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-api:jvm_heap_exhaustion",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:query_latency",
             "weight": 1.0,
@@ -4773,6 +4877,18 @@
           },
           {
             "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:lock_contention",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
             "target": "action:expand_db_connection_pool",
             "weight": 1.0,
             "condition": "on_anomaly"
@@ -4791,16 +4907,16 @@
           }
         ]
       },
-      "node_count": 10,
-      "edge_count": 9
+      "node_count": 12,
+      "edge_count": 12
     },
     "v1.0.6": {
       "version_id": "v1.0.6",
-      "created_at": "2026-10-08T03:08:34.727081+00:00",
+      "created_at": "2026-10-13T02:44:22.410596+00:00",
       "graph": {
         "version_id": "v1.0.6",
-        "node_count": 10,
-        "edge_count": 9,
+        "node_count": 12,
+        "edge_count": 12,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -4901,6 +5017,26 @@
             "info_gain": 0.0,
             "avg_duration_s": 8,
             "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-db:lock_contention",
+            "label": "Check PostgreSQL Row Lock Contention",
+            "node_type": "check",
+            "target_service": "payment-db",
+            "target_metric": "lock_contention",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
+          },
+          {
+            "id": "check:payment-api:jvm_heap_exhaustion",
+            "label": "Check Container Cgroup & JVM Heap Saturation",
+            "node_type": "check",
+            "target_service": "payment-api",
+            "target_metric": "jvm_heap_exhaustion",
+            "info_gain": 0.75,
+            "avg_duration_s": 3,
+            "historical_success_rate": 0.5
           }
         ],
         "edges": [
@@ -4935,6 +5071,12 @@
             "condition": "always"
           },
           {
+            "source": "check:payment-api:p99_latency",
+            "target": "check:payment-api:jvm_heap_exhaustion",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:query_latency",
             "weight": 1.0,
@@ -4942,6 +5084,18 @@
           },
           {
             "source": "check:payment-db:connection_pool",
+            "target": "action:expand_db_connection_pool",
+            "weight": 0.8,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:connection_pool",
+            "target": "check:payment-db:lock_contention",
+            "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
             "target": "action:expand_db_connection_pool",
             "weight": 1.0,
             "condition": "on_anomaly"
@@ -4960,8 +5114,8 @@
           }
         ]
       },
-      "node_count": 10,
-      "edge_count": 9
+      "node_count": 12,
+      "edge_count": 12
     },
     "v1.0.7": {
       "version_id": "v1.0.7",
@@ -6852,11 +7006,11 @@
     },
     "seed-v1.0.0-rem-packet_loss-add-lock_contention": {
       "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
-      "created_at": "2026-10-08T03:05:54.693561+00:00",
+      "created_at": "2026-10-12T12:46:25.563514+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
         "node_count": 12,
-        "edge_count": 12,
+        "edge_count": 13,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -7031,13 +7185,19 @@
           {
             "source": "check:payment-db:connection_pool",
             "target": "action:expand_db_connection_pool",
-            "weight": 1.0,
+            "weight": 0.8,
             "condition": "on_anomaly"
           },
           {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:lock_contention",
             "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
             "condition": "on_anomaly"
           },
           {
@@ -7055,15 +7215,15 @@
         ]
       },
       "node_count": 12,
-      "edge_count": 12
+      "edge_count": 13
     },
     "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache": {
       "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
-      "created_at": "2026-10-08T03:05:54.880477+00:00",
+      "created_at": "2026-10-12T12:46:25.766023+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
         "node_count": 13,
-        "edge_count": 13,
+        "edge_count": 14,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -7248,13 +7408,19 @@
           {
             "source": "check:payment-db:connection_pool",
             "target": "action:expand_db_connection_pool",
-            "weight": 1.0,
+            "weight": 0.8,
             "condition": "on_anomaly"
           },
           {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:lock_contention",
             "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
             "condition": "on_anomaly"
           },
           {
@@ -7278,15 +7444,15 @@
         ]
       },
       "node_count": 13,
-      "edge_count": 13
+      "edge_count": 14
     },
     "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache-add-tls_handshake": {
       "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache-add-tls_handshake",
-      "created_at": "2026-10-08T03:05:55.083443+00:00",
+      "created_at": "2026-10-12T12:46:25.970171+00:00",
       "graph": {
         "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache-add-tls_handshake",
         "node_count": 14,
-        "edge_count": 14,
+        "edge_count": 15,
         "nodes": [
           {
             "id": "entry:payment-api:error_rate",
@@ -7481,13 +7647,19 @@
           {
             "source": "check:payment-db:connection_pool",
             "target": "action:expand_db_connection_pool",
-            "weight": 1.0,
+            "weight": 0.8,
             "condition": "on_anomaly"
           },
           {
             "source": "check:payment-db:connection_pool",
             "target": "check:payment-db:lock_contention",
             "weight": 1.5,
+            "condition": "on_anomaly"
+          },
+          {
+            "source": "check:payment-db:query_latency",
+            "target": "action:expand_db_connection_pool",
+            "weight": 1.0,
             "condition": "on_anomaly"
           },
           {
@@ -7517,7 +7689,7 @@
         ]
       },
       "node_count": 14,
-      "edge_count": 14
+      "edge_count": 15
     },
     "seed-v1.0.0-rem-cpu_utilization": {
       "version_id": "seed-v1.0.0-rem-cpu_utilization",
@@ -12839,6 +13011,181 @@
       "version_id": "seed-v1.0.0-rem-cpu_utilization-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
       "transformation_type": "ADD:check:auth-svc:jwt_jwks_cache",
       "score": 0.4887,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-08T07:54:00.897397+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:35:34.151140+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:44:43.374569+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:24.570101+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.020367+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.061396+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "BENCHMARK_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.339500+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "transformation_type": "REMOVE:check:network:packet_loss",
+      "score": 0.4625,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.563514+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "transformation_type": "ADD:check:payment-db:lock_contention",
+      "score": 0.4682,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.766023+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "transformation_type": "ADD:check:auth-svc:jwt_jwks_cache",
+      "score": 0.4724,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.970171+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache-add-tls_handshake",
+      "transformation_type": "ADD:check:ext-payment-gateway:tls_handshake",
+      "score": 0.4754,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-12T16:08:05.084424+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:41:48.132743+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:42:59.069026+00:00",
+      "version_id": "v1.0.1",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:43:00.776552+00:00",
+      "version_id": "v1.0.2",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:43:02.125946+00:00",
+      "version_id": "v1.0.3",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:43:03.439383+00:00",
+      "version_id": "v1.0.4",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:43:04.493596+00:00",
+      "version_id": "v1.0.5",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:13.316006+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "RESET_SEED",
+      "score": 0.5,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:14.711324+00:00",
+      "version_id": "v1.0.1",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:16.174528+00:00",
+      "version_id": "v1.0.2",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:17.590624+00:00",
+      "version_id": "v1.0.3",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:19.148867+00:00",
+      "version_id": "v1.0.4",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:20.362500+00:00",
+      "version_id": "v1.0.5",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:44:22.410596+00:00",
+      "version_id": "v1.0.6",
+      "transformation_type": "MUTATED_PERSISTED",
+      "score": 0.8,
+      "verification_status": "APPROVED"
+    },
+    {
+      "timestamp": "2026-10-13T02:47:59.055601+00:00",
+      "version_id": "seed-v1.0.0",
+      "transformation_type": "INITIAL_SEED",
+      "score": 0.5,
       "verification_status": "APPROVED"
     }
   ],
@@ -24045,6 +24392,116 @@
     },
     {
       "timestamp": "2026-10-08T04:59:41.947311+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 109
+    },
+    {
+      "timestamp": "2026-10-12T12:46:24.871727+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.169196+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.201954+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 99
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.235192+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.269581+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.303459+00:00",
+      "version_id": "seed-v1.0.0",
+      "mttr_s": 87
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.373148+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.413107+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "mttr_s": 90
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.455555+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "mttr_s": 109
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.490077+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "mttr_s": 102
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.522866+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.597011+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "mttr_s": 95
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.630941+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "mttr_s": 97
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.663732+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "mttr_s": 90
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.696697+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "mttr_s": 95
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.729820+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.801236+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.835081+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "mttr_s": 100
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.867495+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "mttr_s": 82
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.900634+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "mttr_s": 90
+    },
+    {
+      "timestamp": "2026-10-12T12:46:25.933896+00:00",
+      "version_id": "seed-v1.0.0-rem-packet_loss-add-lock_contention-add-jwt_jwks_cache",
+      "mttr_s": 112
+    },
+    {
+      "timestamp": "2026-10-13T02:42:43.410019+00:00",
       "version_id": "seed-v1.0.0",
       "mttr_s": 109
     }
