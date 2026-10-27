@@ -233,9 +233,23 @@ ENTERPRISE_CSS = """
         border-radius: 6px !important;
         border: none !important;
     }
+    .stTabs [data-baseweb="tab"] p, .stTabs [data-baseweb="tab"] span {
+        color: #94a3b8 !important;
+    }
     .stTabs [aria-selected="true"] {
         background-color: #1e293b !important;
         color: #38bdf8 !important;
+    }
+    .stTabs [aria-selected="true"] p, .stTabs [aria-selected="true"] span {
+        color: #38bdf8 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Radio Buttons & Form Label High-Contrast Text */
+    div[data-testid="stRadio"] label, div[data-testid="stRadio"] p, div[data-testid="stRadio"] span {
+        color: #cbd5e1 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
     }
 
     /* Terminal & Log Viewer */
@@ -973,67 +987,67 @@ with tab_live:
 
         node_specs = {
             "entry:payment-api:error_rate": {
-                "x": 24, "y": 230, "w": 170, "h": 58,
+                "x": 20, "y": 230, "w": 185, "h": 58,
                 "badge": "INGRESS ALERT", "icon_type": "alert", "svc": "PAYMENT-API", "metric": "High 5xx Error Rate"
             },
             "check:frontend:cpu_utilization": {
-                "x": 224, "y": 140, "w": 170, "h": 58,
+                "x": 225, "y": 140, "w": 185, "h": 58,
                 "badge": "PERIMETER CHECK", "icon_type": "web", "svc": "FRONTEND WEB", "metric": "CPU Saturation Check"
             },
             "check:network:packet_loss": {
-                "x": 224, "y": 320, "w": 170, "h": 58,
+                "x": 225, "y": 320, "w": 185, "h": 58,
                 "badge": "PERIMETER CHECK", "icon_type": "gateway", "svc": "CORE GATEWAY", "metric": "Network Packet Loss"
             },
             "check:payment-api:p99_latency": {
-                "x": 424, "y": 230, "w": 170, "h": 58,
+                "x": 430, "y": 230, "w": 185, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "api", "svc": "PAYMENT-API", "metric": "p99 Latency Anomaly"
             },
             "check:payment-api:jvm_heap_exhaustion": {
-                "x": 424, "y": 140, "w": 170, "h": 58,
+                "x": 430, "y": 140, "w": 185, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-API", "metric": "Container Heap Saturation"
             },
             "check:auth-svc:token_validation": {
-                "x": 624, "y": 80, "w": 170, "h": 58,
+                "x": 635, "y": 80, "w": 185, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "auth", "svc": "AUTH-SVC", "metric": "Token Validation Time"
             },
             "check:payment-db:connection_pool": {
-                "x": 624, "y": 230, "w": 170, "h": 58,
+                "x": 635, "y": 230, "w": 185, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "db", "svc": "PAYMENT-DB", "metric": "DB Connection Pool"
             },
             "check:ext-payment-gateway:status": {
-                "x": 624, "y": 380, "w": 170, "h": 58,
+                "x": 635, "y": 380, "w": 185, "h": 58,
                 "badge": "CORE PROBE", "icon_type": "ext", "svc": "EXT GATEWAY", "metric": "HTTP 504 Timeout Rate"
             },
             "check:auth-svc:jwt_jwks_cache": {
-                "x": 824, "y": 80, "w": 170, "h": 58,
+                "x": 840, "y": 80, "w": 185, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "AUTH-SVC", "metric": "JWKS Key Cache Eviction"
             },
             "check:payment-db:query_latency": {
-                "x": 824, "y": 190, "w": 170, "h": 58,
+                "x": 840, "y": 190, "w": 185, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Slow Query Latency"
             },
             "check:payment-db:lock_contention": {
-                "x": 824, "y": 270, "w": 170, "h": 58,
+                "x": 840, "y": 270, "w": 185, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "PAYMENT-DB", "metric": "Row Lock Contention"
             },
             "check:ext-payment-gateway:tls_handshake": {
-                "x": 824, "y": 380, "w": 170, "h": 58,
+                "x": 840, "y": 380, "w": 185, "h": 58,
                 "badge": "DEEP PROBE", "icon_type": "deep", "svc": "EXT GATEWAY", "metric": "Acquirer TLS Handshake"
             },
             "action:restart_auth_service": {
-                "x": 1034, "y": 80, "w": 190, "h": 58,
+                "x": 1050, "y": 80, "w": 195, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "AUTH-SVC", "metric": "Restart Auth Pods"
             },
             "action:restart_payment_api": {
-                "x": 1034, "y": 150, "w": 190, "h": 58,
+                "x": 1050, "y": 150, "w": 195, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-API", "metric": "Restart Pods & Scale RAM"
             },
             "action:expand_db_connection_pool": {
-                "x": 1034, "y": 230, "w": 190, "h": 58,
+                "x": 1050, "y": 230, "w": 195, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "PAYMENT-DB", "metric": "Scale Connection Pool"
             },
             "action:circuit_breaker_payment_gateway": {
-                "x": 1034, "y": 380, "w": 190, "h": 58,
+                "x": 1050, "y": 380, "w": 195, "h": 58,
                 "badge": "REMEDIATION ACTION", "icon_type": "action", "svc": "EXT GATEWAY", "metric": "Trip Gateway Circuit"
             }
         }
@@ -1137,16 +1151,20 @@ with tab_live:
 
             icon_html = SVG_ICONS.get(info.get("icon_type", "api"), SVG_ICONS["api"])
 
+            badge_w = 46 if status_text in ["IDLE", "PASS"] else (58 if status_text in ["ACTION", "ALERT"] else 66)
+            badge_x = x + w - badge_w - 6
+            badge_text_x = badge_x + (badge_w / 2)
+
             node_svg_cards.append(f"""
             <g class="{card_class}">
                 <title>{label}&#10;Target: {info['svc']}&#10;Metric: {info['metric']}&#10;Shannon Info Gain: {ig:.3f} bits</title>
                 <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{card_fill}" stroke="{border_color}" stroke-width="1"/>
-                <g transform="translate({x + 9}, {y + 9})" stroke="{icon_color}">
+                <g transform="translate({x + 8}, {y + 9})" stroke="{icon_color}">
                     {icon_html}
                 </g>
-                <text x="{x + 28}" y="{y + 20}" font-size="10" font-weight="700" letter-spacing="0.5" fill="{title_color}">{info['svc']}</text>
-                <rect x="{x + w - 74}" y="{y + 8}" width="66" height="15" rx="3" fill="{status_bg}"/>
-                <text x="{x + w - 41}" y="{y + 19}" font-size="7.5" font-weight="700" font-family="'Geist Mono', 'JetBrains Mono', monospace" fill="{status_fg}" text-anchor="middle">{status_text}</text>
+                <text x="{x + 26}" y="{y + 20}" font-size="9.5" font-weight="700" letter-spacing="0.3" fill="{title_color}">{info['svc']}</text>
+                <rect x="{badge_x}" y="{y + 8}" width="{badge_w}" height="15" rx="3" fill="{status_bg}"/>
+                <text x="{badge_text_x}" y="{y + 19}" font-size="7.5" font-weight="700" font-family="'Geist Mono', 'JetBrains Mono', monospace" fill="{status_fg}" text-anchor="middle">{status_text}</text>
                 <text x="{x + 10}" y="{y + 38}" font-size="9" font-family="'Geist Mono', 'JetBrains Mono', monospace" fill="{metric_color}">{info['metric']}</text>
                 <text x="{x + 10}" y="{y + 50}" font-size="7.5" fill="#475569" font-family="'Geist Mono', 'JetBrains Mono', monospace">IG: {ig:.2f}b • {nid.split(':')[-1][:18]}</text>
             </g>
