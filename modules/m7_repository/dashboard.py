@@ -216,33 +216,45 @@ ENTERPRISE_CSS = """
         border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
-    /* Tabs Styling */
+    /* Universal High-Contrast Tab Text Styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #111827;
-        padding: 6px 12px;
-        border-radius: 8px;
-        border: 1px solid #1f293d;
-        margin-bottom: 20px;
+        gap: 10px !important;
+        background-color: #111827 !important;
+        padding: 6px 12px !important;
+        border-radius: 8px !important;
+        border: 1px solid #1f293d !important;
+        margin-bottom: 20px !important;
     }
-    .stTabs [data-baseweb="tab"] {
+    .stTabs button[role="tab"] {
         font-size: 13.5px !important;
         font-weight: 600 !important;
-        color: #94a3b8 !important;
+        background-color: transparent !important;
         padding: 8px 16px !important;
         border-radius: 6px !important;
         border: none !important;
     }
-    .stTabs [data-baseweb="tab"] p, .stTabs [data-baseweb="tab"] span {
+    /* Force all text inside inactive tabs to crisp visible light-slate */
+    .stTabs button[role="tab"],
+    .stTabs button[role="tab"] *,
+    .stTabs [data-baseweb="tab"],
+    .stTabs [data-baseweb="tab"] * {
         color: #94a3b8 !important;
+        fill: #94a3b8 !important;
+        opacity: 1 !important;
     }
-    .stTabs [aria-selected="true"] {
+    /* Active selected tab: glowing cyan text on elevated dark slate pill */
+    .stTabs button[role="tab"][aria-selected="true"],
+    .stTabs button[role="tab"][aria-selected="true"] *,
+    .stTabs [aria-selected="true"],
+    .stTabs [aria-selected="true"] * {
         background-color: #1e293b !important;
         color: #38bdf8 !important;
-    }
-    .stTabs [aria-selected="true"] p, .stTabs [aria-selected="true"] span {
-        color: #38bdf8 !important;
+        fill: #38bdf8 !important;
         font-weight: 700 !important;
+    }
+    .stTabs button[role="tab"]:hover,
+    .stTabs button[role="tab"]:hover * {
+        color: #f1f5f9 !important;
     }
 
     /* Radio Buttons & Form Label High-Contrast Text */
